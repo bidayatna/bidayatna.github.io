@@ -1,0 +1,1283 @@
+/* Container for Mobile Fixed Buttons (Optional Styling) */
+.mobile-fixed-buttons {
+  /* This container primarily serves for HTML structure. */
+}
+
+.menu-toggle {
+display: none; /* Hidden by default, shown in media query */
+position: fixed;
+top: 12px;
+right: 16px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: #fff;
+border: 1px solid #ddd;
+box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+z-index: 200; /* Ensure it stays above other content */
+align-items: center;
+justify-content: center;
+cursor: pointer;
+padding: 0;
+}
+
+.menu-toggle svg {
+display: block;
+margin: auto;
+}
+
+/* Common Dark Mode Toggle Styles */
+.dark-mode-toggle {
+  margin: 0;
+  padding: clamp(8px, 2vw, 14px) clamp(14px, 4vw, 28px);
+  background-color: #f5f5f5;
+  color: #222;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, border 0.2s;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+/* Ensure img icons inside buttons are vertically aligned */
+.dark-mode-toggle img {
+    vertical-align: middle;
+}
+
+/* Desktop Dark Mode Toggle Specific Styles */
+#dark-mode-toggle-desktop {
+  /* Styles are inherited from .dark-mode-toggle and match other desktop buttons */
+  /* Ensure it's visible by default (desktop first) */
+  display: inline-flex;
+}
+
+/* Mobile Dark Mode Toggle Specific Styles */
+#dark-mode-toggle-mobile {
+  display: none; /* Hidden by default, shown in media query */
+}
+
+
+@media (max-width: 1024px), (pointer: coarse) {
+  .menu-toggle {
+    display: flex; /* Show hamburger toggle */
+    /* position: fixed and z-index: 200 ensure it stays visible */
+  }
+
+  /* Hide Desktop Dark Mode Toggle */
+  #dark-mode-toggle-desktop {
+    display: none;
+  }
+
+  /* Show and Position Mobile Dark Mode Toggle */
+  #dark-mode-toggle-mobile {
+    display: flex; /* Show on mobile */
+    position: fixed;
+    top: 12px; /* Align vertically with hamburger toggle */
+    right: 68px; /* Position to the left: 16px (toggle right) + 44px (toggle width) + 8px (gap) */
+    width: 44px; /* Match hamburger toggle size */
+    height: 44px; /* Match hamburger toggle size */
+    padding: 0; /* Reset padding for icon-only button */
+    justify-content: center; /* Center icon */
+    align-items: center; /* Center icon */
+    border-radius: 50%; /* Match hamburger toggle shape */
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    z-index: 200; /* Same level as hamburger toggle */
+    gap: 0; /* Reset gap */
+  }
+  #dark-mode-toggle-mobile .moon-icon,
+  #dark-mode-toggle-mobile .sun-icon {
+      margin: 0; /* Remove potential margins */
+      display: inline-flex; /* Ensure icons display correctly */
+      /* Width/height set on img tag */
+  }
+  /* Hamburger Menu Container - Vertical Panel (Relative Sizing - Larger) */
+  .top-right-buttons {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 68px; /* Position further below the toggle button */
+    right: 16px;
+    flex-direction: column !important; /* Vertical layout (Force it) */
+    background: #fff; /* White background */
+    border: 1px solid #ccc; /* Border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Existing shadow */
+    padding: 10px 0; /* Vertical padding, no horizontal */
+    /* Reverted Dimensions */
+    width: 75px; /* Panel width back to 75px */
+    height: 180px; /* Keep height */
+    z-index: 210; /* Above toggle button (z-index 200) */
+    opacity: 0;
+    visibility: hidden;
+    align-items: center; /* Center buttons horizontally */
+    justify-content: space-around; /* Distribute buttons vertically */
+    transition: opacity 0.15s ease-out, visibility 0s linear 0.15s;
+  }
+
+  /* Hide the desktop dark mode toggle IF IT IS INSIDE the menu container (Fallback) */
+  .top-right-buttons #dark-mode-toggle-desktop {
+      display: none !important; /* Force hide if it's inside the menu */
+  }
+
+  .top-right-buttons.show {
+    display: flex; /* Show when class is added */
+    opacity: 1;
+    visibility: visible;
+    animation: fadeInMenu 0.15s ease-out;
+    transition: opacity 0.15s ease-out, visibility 0s linear 0s;
+  }
+
+  /* Icon Buttons inside Hamburger Menu */
+  .top-right-buttons button:not(.dark-mode-toggle) {
+    width: 51px; /* Reverted button width */
+    height: 51px; /* Reverted button height */
+    border-radius: 6px; /* Reverted radius */
+    border: none; /* No border */
+    justify-content: center; /* Center icon horizontally */
+    align-items: center; /* Center icon vertically */
+    padding: 0; /* No padding inside button */
+    background: #f0f0f0; /* Light background */
+    color: #222; /* Default color (not really used) */
+    font-size: 0; /* Hide residual text/space */
+    transition: background-color 0.15s;
+    display: flex; /* Use flex to center icon */
+    cursor: pointer; /* Ensure cursor is pointer */
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+
+  /* Remove the rule for .menu-text */
+
+  /* Keep specific icon colors */
+  .top-right-buttons #youtube-btn svg {
+      fill: #ff0000;
+  }
+  .top-right-buttons #privacy-btn svg {
+      fill: #1976d2;
+  }
+  .top-right-buttons #contact-btn svg {
+      fill: #43a047;
+  }
+
+  /* Icon sizes and alignment */
+  .top-right-buttons button:not(.dark-mode-toggle) svg {
+      width: 32px; /* Icon size increased */
+      height: 32px; /* Icon size increased */
+      display: block; /* Prevent extra space */
+  }
+
+  /* Hover effect */
+  .top-right-buttons button:not(.dark-mode-toggle):hover {
+      background-color: #e0e0e0; /* Slightly darker background on hover */
+  }
+
+  /* The last-child rule is not needed */
+}
+
+@keyframes fadeInMenu {
+from { opacity: 0; transform: translateY(-8px);}
+to { opacity: 1; transform: translateY(0);}
+}
+
+/* Prevent horizontal scrolling */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+background-color: #f5efe6; /* Light mode background */
+color: #36454F; /* Default text color */
+position: relative; /* Changed from absolute to relative for better overflow control */
+transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-container {
+text-align: center;
+/* position: absolute; REMOVED - let it flow naturally */
+/* top: clamp(10px, 3vw, 32px); REMOVED */
+width: 100%;
+z-index: 2; /* Below overlay/modals */
+max-width: 100%; /* Ensure it doesn't exceed viewport */
+padding: clamp(10px, 3vw, 32px) clamp(8px, 4vw, 32px); /* Added top/bottom padding */
+box-sizing: border-box;
+overflow-x: hidden; /* Prevent internal overflow */
+}
+
+/* Desktop top-right buttons (Container) */
+.top-right-buttons {
+position: absolute;
+top: clamp(12px, 3vw, 24px);
+right: clamp(8px, 4vw, 32px);
+display: flex;
+flex-direction: row; /* Horizontal on desktop */
+gap: clamp(6px, 2vw, 16px);
+z-index: 100; /* Above main content, below hamburger toggle */
+}
+
+/* Desktop individual buttons (including dark mode toggle) */
+.top-right-buttons > button {
+  margin: 0;
+  padding: clamp(8px, 2vw, 14px) clamp(14px, 4vw, 28px);
+  background-color: #f5f5f5;
+  color: #222;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.2s, border 0.2s;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+  touch-action: manipulation;
+}
+
+/* Specific Desktop Button Styles */
+#dark-mode-toggle-desktop {
+  /* Inherits base styles, ensure icons are centered if needed */
+  justify-content: center;
+  padding: clamp(8px, 2vw, 14px); /* Adjust padding for icon only */
+}
+#dark-mode-toggle-desktop .moon-icon,
+#dark-mode-toggle-desktop .sun-icon {
+    margin: 0;
+    display: inline-flex;
+    /* Width/height set on img tag */
+}
+
+#contact-btn {
+background-color: #87CEEB; /* Sky blue background */
+color: #222; /* Keep original text color */
+border-color: #6ab8d8; /* Optional: darker border */
+}
+
+#youtube-btn {
+background-color: #ff0000;
+color: #fff;
+border: none;
+}
+#youtube-btn:hover {
+background-color: #cc0000;
+}
+
+/* Separate hover states */
+#privacy-btn:hover {
+background-color: #e3e3e3;
+border-color: #1976d2;
+}
+
+#contact-btn:hover {
+background-color: #6ab8d8; /* Darker sky blue on hover */
+border-color: #5a9dbd; /* Even darker border on hover */
+}
+
+#dark-mode-toggle-desktop:hover {
+  background-color: #e3e3e3;
+}
+
+.youtube-icon {
+display: inline-block;
+margin-right: 6px;
+vertical-align: middle;
+}
+
+.privacy-icon, .contact-icon {
+display: inline-block;
+vertical-align: middle;
+}
+
+.contact-content {
+max-width: 400px;
+width: 90vw;
+}
+
+.contact-list {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.contact-list li {
+margin-bottom: 14px;
+font-size: 1.05rem;
+}
+
+.contact-list a {
+color: #1976d2;
+text-decoration: none;
+}
+
+.contact-list a:hover {
+text-decoration: underline;
+}
+
+.title-container {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: clamp(2px, 0.5vw, 8px);
+flex-wrap: wrap;
+}
+
+.title-container h1 {
+margin: 5px 0;
+font-size: clamp(2rem, 6vw, 3.2rem);
+display: inline-block;
+word-break: break-word;
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.title-ar {
+font-family: 'Tajawal', Arial, sans-serif;
+font-weight: 700;
+direction: rtl;
+font-size: clamp(1.8rem, 5vw, 2.8rem);
+color: #222;
+margin-left: 0;
+}
+
+.founder-container {
+margin-top: 10px;
+}
+
+.founder-name {
+font-size: clamp(1.1rem, 3vw, 1.5rem);
+margin: 0;
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.founder-label {
+font-size: clamp(1rem, 2vw, 1.2rem);
+color: gray;
+font-weight: bold;
+letter-spacing: 0.5px;
+margin-left: 8px;
+margin-right: 8px;
+/* background: #e3f2fd; REMOVED */
+/* padding: 2px 10px; REMOVED */
+/* border-radius: 6px; REMOVED */
+display: inline-block;
+/* box-shadow: 0 1px 4px rgba(25, 118, 210, 0.08); REMOVED */
+/* border: 1px solid #e0e0e0; REMOVED */
+}
+
+/* --- COLUMNS FOR MARKETING STRATEGY --- */
+.columns-flex {
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: flex-start;
+gap: 32px;
+flex-wrap: wrap; /* Changed from nowrap to wrap */
+margin: 32px 0 0 0;
+}
+
+.column {
+min-width: 220px;
+max-width: 340px;
+flex: 1 1 300px; /* Allow shrinking and growing, base width 300px */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+margin: 0 8px;
+}
+
+.column-title {
+font-weight: bold;
+font-size: 1.18rem;
+margin-bottom: 10px;
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+@media (max-width: 900px) {
+.columns-flex {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+}
+.column {
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  flex-basis: auto; /* Reset flex-basis */
+}
+}
+
+.linkedin-link {
+display: inline-flex;
+align-items: center;
+margin-top: 10px;
+color: #0077b5;
+text-decoration: none;
+font-weight: bold;
+font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
+.linkedin-link .linkedin-icon {
+display: inline-block;
+width: 18px;
+height: 18px;
+margin-right: 6px;
+vertical-align: middle;
+}
+
+.linkedin-link:hover {
+text-decoration: underline;
+}
+
+/* --- Modal Overlay --- */
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+background-color: rgba(0, 0, 0, 0.6); /* Dimming effect */
+z-index: 1000; /* Below modals (High Value) */
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+pointer-events: none; /* Prevent clicks when hidden */
+}
+
+.modal-overlay.is-visible {
+opacity: 1;
+visibility: visible;
+transition: opacity 0.3s ease, visibility 0s linear 0s;
+pointer-events: auto; /* Enable pointer events ONLY when visible to block clicks */
+}
+
+/* --- Modal Base Styles --- */
+.modal {
+visibility: hidden; /* Ensure hidden */
+opacity: 0; /* Start fully transparent */
+position: fixed;
+z-index: 1001; /* Above overlay (High Value) */
+left: 0;
+top: 0;
+width: 100vw;
+height: 100vh;
+overflow: auto; /* Enable scroll if content overflows viewport */
+padding: 0;
+box-sizing: border-box;
+transition: opacity 0.3s ease, visibility 0s linear 0.3s; /* Delay visibility change */
+display: flex; /* Use flexbox for centering content */
+align-items: center; /* Vertically center */
+justify-content: center; /* Horizontally center */
+}
+
+.modal.is-open {
+visibility: visible;
+opacity: 1;
+transition: opacity 0.3s ease, visibility 0s linear 0s;
+}
+
+.modal-content {
+background-color: #fff;
+padding: clamp(12px, 3vw, 32px);
+border: 1px solid #888;
+width: 95vw;
+max-width: 800px;
+border-radius: 12px;
+box-sizing: border-box;
+position: relative; /* Needed for absolute positioning of close button */
+max-height: 90vh; /* Prevent modal from being too tall */
+overflow-y: auto; /* Allow content scrolling within the modal */
+overflow-x: hidden; /* Prevent horizontal scroll within modal */
+}
+
+/* Modal Close Button */
+.modal-close {
+position: absolute; /* Position relative to modal-content */
+top: 10px;
+right: 15px;
+color: #aaa;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+line-height: 1;
+padding: 5px; /* Add padding for easier clicking */
+z-index: 11; /* Ensure it's above modal content */
+}
+
+.modal-close:hover,
+.modal-close:focus {
+color: black;
+text-decoration: none;
+}
+
+
+/* Specific Modal Content Styles (e.g., survey, youtube) */
+.survey-modal-content {
+max-width: 600px; /* Example: narrower survey */
+}
+
+.youtube-modal-content {
+max-width: 900px; /* Example: wider video modal */
+}
+
+.video-container {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: clamp(10px, 3vw, 24px);
+align-items: flex-start;
+margin-top: 20px;
+}
+
+.video-box {
+width: clamp(220px, 40vw, 350px);
+height: clamp(180px, 40vw, 350px);
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+}
+
+iframe {
+width: 100%;
+height: 100%;
+border: none;
+border-radius: 8px;
+max-width: 100%; /* Ensure iframe doesn't overflow */
+}
+
+h3 {
+margin-bottom: 10px;
+font-size: clamp(1rem, 2.5vw, 1.2rem);
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+
+@media (max-width: 900px) {
+.main-container {
+  /* top: clamp(6px, 2vw, 16px); REMOVED */
+  padding: clamp(6px, 2vw, 16px) clamp(4px, 2vw, 16px); /* Adjusted padding */
+}
+.modal-content {
+  padding: clamp(8px, 2vw, 20px);
+  width: 98vw;
+  max-width: 98vw;
+}
+.video-box {
+  width: clamp(160px, 80vw, 320px);
+  height: clamp(120px, 40vw, 220px);
+}
+/* top-right-buttons handled by hamburger styles */
+}
+
+@media (max-width: 600px) {
+.main-container {
+  /* top: 0; REMOVED */
+  padding: 10px 2vw; /* Adjusted padding */
+}
+.title-container {
+  gap: 8px;
+  flex-direction: column;
+}
+.modal-content {
+  padding: 8px;
+  width: 99vw;
+  max-width: 99vw;
+  max-height: 95vh;
+}
+.video-container {
+  flex-direction: column;
+  gap: 12px;
+}
+.video-box {
+  width: 98vw;
+  max-width: 340px;
+  height: 180px;
+}
+/* top-right-buttons handled by hamburger styles */
+.modal-close {
+    top: 5px;
+    right: 8px;
+}
+}
+
+@media (max-width: 400px) {
+.main-container {
+  padding: 10px 1vw; /* Adjusted padding */
+}
+.modal-content {
+  padding: 4px;
+}
+.video-box {
+  width: 96vw;
+  height: 120px;
+}
+}
+
+/* --- Input Field Styles --- */
+.input-field {
+width: 100%;
+padding: 12px 15px; /* Increased padding */
+margin-bottom: 15px; /* Increased margin */
+border: 1px solid #ccc; /* Default border */
+border-radius: 6px; /* Slightly rounded corners */
+font-size: 1rem; /* Slightly larger font */
+box-sizing: border-box;
+background-color: #f8f8f8; /* Off-white background */
+color: #36454F; /* Charcoal text color */
+transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+.input-field::placeholder {
+color: #aaa; /* Lighter placeholder */
+opacity: 1;
+}
+
+.input-field:focus {
+border-color: #87CEEB; /* Sky blue border on focus */
+outline: none;
+box-shadow: 0 0 0 2px rgba(135, 206, 235, 0.3); /* Subtle sky blue glow */
+}
+
+.textarea-field {
+min-height: 100px; /* Increased min-height */
+resize: vertical;
+}
+
+/* Style for when placeholder is hidden via JS */
+.input-field.hide-placeholder::placeholder {
+color: transparent;
+}
+
+/* --- Select Dropdown Styles --- */
+.select-group {
+margin-bottom: 15px;
+text-align: left;
+}
+
+.select-group .group-label {
+display: block;
+font-weight: bold;
+margin-bottom: 8px;
+font-size: 0.98rem;
+color: #36454F; /* Charcoal label */
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.select-field {
+appearance: none; /* Remove default system appearance */
+background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2336454F%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E');
+background-repeat: no-repeat;
+background-position: right 15px top 50%;
+background-size: .65em auto;
+cursor: pointer;
+}
+
+/* --- Checkbox & Radio Group Styles --- */
+.checkbox-group, .radio-group {
+margin-bottom: 15px;
+text-align: left;
+border: 1px solid #ddd; /* Light border around group */
+padding: 12px 15px;
+border-radius: 6px;
+background-color: #fff; /* White background for contrast */
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.checkbox-group .group-label, .radio-group .group-label {
+display: block;
+font-weight: bold;
+margin-bottom: 10px; /* Increased spacing */
+font-size: 0.98rem;
+color: #36454F; /* Charcoal label */
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.checkbox-group label, .radio-group label {
+display: flex; /* Use flex for alignment */
+align-items: center;
+margin-bottom: 8px; /* Spacing between options */
+font-size: 0.95rem;
+color: #36454F; /* Charcoal text */
+cursor: pointer;
+overflow-wrap: break-word; /* Ensure wrapping */
+word-break: break-word; /* Ensure wrapping */
+}
+
+.checkbox-group input[type="checkbox"], .radio-group input[type="radio"] {
+margin-right: 10px;
+cursor: pointer;
+appearance: none; /* Remove default */
+background-color: #f8f8f8; /* Off-white */
+border: 1px solid #ccc;
+width: 1.1em;
+height: 1.1em;
+position: relative;
+top: -1px; /* Align better with text */
+transition: background-color 0.2s, border-color 0.2s;
+flex-shrink: 0; /* Prevent shrinking */
+}
+
+.checkbox-group input[type="checkbox"] {
+border-radius: 3px; /* Slightly rounded checkbox */
+}
+
+.radio-group input[type="radio"] {
+border-radius: 50%; /* Circular radio button */
+}
+
+/* Checked state */
+.checkbox-group input[type="checkbox"]:checked, 
+.radio-group input[type="radio"]:checked {
+background-color: #87CEEB; /* Sky blue background when checked */
+border-color: #6ab8d8; /* Darker sky blue border */
+}
+
+/* Checkmark/Dot for checked state */
+.checkbox-group input[type="checkbox"]:checked::after {
+content: '\2713'; /* Checkmark */
+display: block;
+color: #fff; /* White checkmark */
+font-size: 0.8em;
+text-align: center;
+line-height: 1.1em;
+}
+
+.radio-group input[type="radio"]:checked::after {
+content: '';
+display: block;
+width: 0.5em;
+height: 0.5em;
+border-radius: 50%;
+background: #fff; /* White dot */
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+/* Focus state for radios/checkboxes */
+.checkbox-group input[type="checkbox"]:focus, 
+.radio-group input[type="radio"]:focus {
+outline: none;
+box-shadow: 0 0 0 2px rgba(135, 206, 235, 0.3); /* Sky blue glow */
+}
+
+/* --- Header Logo Style --- */
+.header-logo {
+display: block; /* To allow margin auto centering */
+margin: 20px auto 15px auto; /* Top margin, auto left/right for centering, bottom margin */
+max-width: 50%; /* UPDATED: Further reduced width on smaller screens */
+height: auto; /* Maintain aspect ratio */
+border-radius: 8px; /* Optional: slightly rounded corners */
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Optional: subtle shadow */
+}
+
+@media (min-width: 600px) {
+.header-logo {
+  max-width: 250px; /* UPDATED: Further reduced fixed max-width on larger screens */
+}
+}
+
+/* --- Submit Button & Disclaimer Styles --- */
+.submit-container {
+text-align: center;
+margin-top: 40px; /* Add space above the button */
+margin-bottom: 50px; /* Add space below the disclaimers */
+}
+
+.submit-button {
+padding: 12px 30px;
+font-size: 1.1rem;
+font-weight: bold;
+color: #fff;
+background-color: #87CEEB; /* Sky blue */
+border: none;
+border-radius: 6px;
+cursor: pointer;
+transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+background-color: #6ab8d8; /* Darker sky blue */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.disclaimer {
+margin-top: 20px;
+font-size: 0.9rem;
+color: #555;
+max-width: 600px;
+margin-left: auto;
+margin-right: auto;
+line-height: 1.5;
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.disclaimer p {
+margin: 5px 0;
+}
+
+/* --- Survey Trigger Button --- */
+.survey-trigger-container {
+text-align: center;
+margin-top: 30px;
+margin-bottom: 40px;
+}
+
+.survey-trigger-button {
+padding: 10px 25px;
+font-size: 1rem;
+color: #1976d2; /* Blue text */
+background-color: transparent;
+border: 1px solid #1976d2; /* Blue border */
+border-radius: 6px;
+cursor: pointer;
+transition: background-color 0.2s, color 0.2s;
+}
+
+.survey-trigger-button:hover {
+background-color: #e3f2fd; /* Light blue background on hover */
+color: #1565c0; /* Darker blue text */
+}
+
+/* --- Survey Modal Specific Styles --- */
+.survey-modal-content h2 {
+text-align: center;
+margin-bottom: 25px;
+color: #333;
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.survey-question {
+margin-bottom: 25px;
+text-align: left;
+}
+
+.survey-question .group-label {
+display: block;
+font-weight: bold;
+margin-bottom: 10px;
+font-size: 1rem;
+color: #36454F;
+overflow-wrap: break-word; /* Ensure wrapping */
+}
+
+.survey-question .required {
+color: red;
+margin-left: 3px;
+}
+
+.survey-radio-group, .survey-checkbox-group {
+border: none; /* Remove border for survey groups */
+padding: 0; /* Remove padding */
+background-color: transparent; /* Transparent background */
+}
+
+.survey-specify-field {
+margin-top: 8px;
+margin-left: 25px; /* Indent specify fields */
+width: calc(100% - 25px); /* Adjust width */
+}
+
+#social-media-specify label {
+  font-weight: normal; /* Normal weight for sub-options */
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 5px;
+  margin-left: 25px; /* Align with radio/checkbox */
+}
+
+/* --- Dark Mode Styles --- */
+body.dark-mode {
+background-color: #23272a; /* Charcoal background */
+color: #f5f5f5; /* Off-white text */
+}
+
+body.dark-mode .main-container {
+/* No change needed unless specific elements need dark mode adjustments */
+}
+
+/* Update text colors */
+body.dark-mode .title-en,
+body.dark-mode .title-ar,
+body.dark-mode .founder-name,
+body.dark-mode .column-title,
+body.dark-mode .checkbox-group .group-label,
+body.dark-mode .radio-group .group-label,
+body.dark-mode .select-group .group-label,
+body.dark-mode .survey-question .group-label {
+color: #f5f5f5; /* Off-white text */
+}
+
+body.dark-mode .founder-label {
+/* background: #2c3136; REMOVED */
+color: #ccc;
+/* border-color: #33373a; REMOVED */
+}
+
+body.dark-mode .linkedin-link {
+color: #87CEEB; /* Lighter blue for links */
+}
+
+/* Update input/box colors */
+body.dark-mode .input-field {
+background-color: #111111; /* Black background */
+border-color: #33373a; /* Dark grey border */
+color: #f5f5f5; /* Off-white text */
+}
+
+body.dark-mode .input-field::placeholder {
+color: #888;
+}
+
+body.dark-mode .input-field:focus {
+border-color: #87CEEB;
+box-shadow: 0 0 0 2px rgba(135, 206, 235, 0.4); /* Slightly stronger glow */
+}
+
+body.dark-mode .select-field {
+background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23AAAAAA%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.4-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); /* Grey arrow */
+}
+
+body.dark-mode .checkbox-group, 
+body.dark-mode .radio-group {
+background-color: #111111; /* Black background */
+border-color: #33373a; /* Dark grey border */
+}
+
+body.dark-mode .checkbox-group label,
+body.dark-mode .radio-group label {
+color: #ccc;
+}
+
+body.dark-mode .checkbox-group input[type="checkbox"], 
+body.dark-mode .radio-group input[type="radio"] {
+background-color: #2c3136; /* Slightly lighter charcoal */
+border-color: #444; /* Adjust border */
+}
+
+body.dark-mode .checkbox-group input[type="checkbox"]:checked, 
+body.dark-mode .radio-group input[type="radio"]:checked {
+background-color: #87CEEB; /* Keep sky blue for checked state */
+border-color: #6ab8d8;
+}
+
+body.dark-mode .checkbox-group input[type="checkbox"]:checked::after {
+color: #111111; /* Black checkmark */
+}
+
+body.dark-mode .radio-group input[type="radio"]:checked::after {
+background: #111111; /* Black dot */
+}
+
+body.dark-mode .checkbox-group input[type="checkbox"]:focus, 
+body.dark-mode .radio-group input[type="radio"]:focus {
+box-shadow: 0 0 0 2px rgba(135, 206, 235, 0.4);
+}
+
+body.dark-mode .submit-button {
+background-color: #87CEEB;
+color: #111111; /* Black text on light button */
+}
+
+body.dark-mode .submit-button:hover {
+background-color: #6ab8d8;
+}
+
+body.dark-mode .disclaimer {
+color: #aaa;
+}
+
+body.dark-mode .survey-trigger-button {
+color: #87CEEB;
+border-color: #87CEEB;
+}
+
+body.dark-mode .survey-trigger-button:hover {
+background-color: rgba(135, 206, 235, 0.1); /* Very light blue background */
+color: #a0d8ef; /* Slightly lighter blue text */
+}
+
+/* Update modal colors */
+body.dark-mode .modal-content {
+background-color: #111111; /* Black background */
+border-color: #33373a; /* Dark grey border */
+color: #f5f5f5; /* Off-white text */
+}
+
+body.dark-mode .modal-close {
+color: #aaa;
+}
+
+body.dark-mode .modal-close:hover,
+body.dark-mode .modal-close:focus {
+color: #fff;
+}
+
+body.dark-mode .survey-modal-content h2 {
+color: #f5f5f5; /* Off-white text */
+}
+
+body.dark-mode .contact-list a {
+color: #87CEEB;
+}
+
+/* Dark mode for hamburger menu toggle */
+body.dark-mode .menu-toggle {
+  background: #2c3136; /* Slightly lighter charcoal */
+  border-color: #33373a; /* Dark grey border */
+}
+body.dark-mode .menu-toggle svg rect {
+  fill: #ccc;
+}
+
+/* Dark mode for hamburger menu content box */
+body.dark-mode .top-right-buttons {
+  /* Styles apply to container, but visibility handled by media query */
+  background: #2c3136; /* Slightly lighter charcoal */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  border: 1px solid #33373a; /* Add subtle border */
+}
+body.dark-mode .top-right-buttons button:not(.dark-mode-toggle) {
+  background: #33373a; /* Dark grey buttons */
+}
+body.dark-mode .top-right-buttons button:not(.dark-mode-toggle):hover {
+  background: #444950; /* Slightly lighter on hover */
+}
+/* Ensure icons are visible in dark mode */
+body.dark-mode .top-right-buttons #youtube-btn svg,
+body.dark-mode .top-right-buttons #privacy-btn svg,
+body.dark-mode .top-right-buttons #contact-btn svg {
+  /* Colors are already set, just ensure they remain */
+}
+
+/* Dark mode toggle button icons (Mobile - positioned outside menu) */
+body.dark-mode #dark-mode-toggle-mobile {
+  background: #2c3136; /* Slightly lighter charcoal */
+  border-color: #33373a; /* Dark grey border */
+}
+/* No fill needed for img tags */
+
+/* Dark mode toggle button icons (Desktop - inside menu) */
+body.dark-mode #dark-mode-toggle-desktop {
+    background-color: #2c3136; /* Slightly lighter charcoal */
+    border-color: #33373a;
+}
+body.dark-mode #dark-mode-toggle-desktop:hover {
+    background-color: #33373a;
+}
+/* No fill needed for img tags */
+
+/* Adjustments for non-hamburger buttons in dark mode (Desktop) */
+body.dark-mode #youtube-btn,
+body.dark-mode #privacy-btn,
+body.dark-mode #contact-btn {
+    /* Desktop styles for these buttons */
+    background-color: #2c3136; /* Slightly lighter charcoal */
+    border-color: #33373a;
+    color: #f5f5f5;
+}
+body.dark-mode #youtube-btn {
+    background-color: #ff0000; /* Keep red */
+    color: #fff;
+    border: none;
+}
+body.dark-mode #youtube-btn:hover {
+    background-color: #cc0000;
+}
+body.dark-mode #privacy-btn {
+    background-color: #2c3136;
+    border-color: #33373a;
+}
+body.dark-mode #privacy-btn:hover {
+    background-color: #33373a;
+    border-color: #87CEEB; /* Highlight border on hover */
+}
+body.dark-mode #privacy-btn svg {
+    fill: #87CEEB; /* Lighter blue icon */
+}
+body.dark-mode #contact-btn {
+    background-color: #87CEEB; /* Keep sky blue */
+    color: #111111; /* Black text */
+    border-color: #6ab8d8;
+}
+body.dark-mode #contact-btn:hover {
+    background-color: #6ab8d8;
+    border-color: #5a9dbd;
+}
+body.dark-mode #contact-btn svg {
+    fill: #111111; /* Black icon */
+}
+
+/* Dark mode overlay */
+body.dark-mode .modal-overlay {
+  background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+}
+
+
+  /* Specific YouTube Button Style in Mobile Menu */
+  .top-right-buttons #youtube-btn {
+      background-color: #ff0000; /* Red background */
+  }
+  .top-right-buttons #youtube-btn:hover {
+      background-color: #cc0000; /* Darker red on hover */
+  }
+  .top-right-buttons #youtube-btn svg {
+      fill: #ffffff; /* White icon */
+  }
+
+
+/* --- Cookie Consent Banner --- */
+.cookie-consent-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; /* Dark background */
+  color: #fff; /* Light text */
+  padding: 15px 25px;
+  box-sizing: border-box;
+  z-index: 1100; /* Above most other content */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 15px;
+  font-size: 0.9rem;
+}
+
+.cookie-consent-banner p {
+  margin: 0;
+  flex-grow: 1; /* Allow text to take available space */
+  max-width: calc(100% - 120px); /* Adjust based on button width */
+}
+
+.cookie-consent-banner a {
+  color: #87CEEB; /* Sky blue link */
+  text-decoration: underline;
+}
+
+.accept-cookies-button {
+  padding: 8px 18px;
+  background-color: #87CEEB; /* Sky blue background */
+  color: #222; /* Dark text */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.accept-cookies-button:hover {
+  background-color: #6ab8d8; /* Darker sky blue */
+}
+
+@media (max-width: 600px) {
+  .cookie-consent-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cookie-consent-banner p {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+
+
+
+/* --- Privacy & Terms Modal Content --- */
+.privacy-terms-content {
+  text-align: left; /* Align text left for readability */
+  max-height: 80vh; /* Ensure modal content is scrollable */
+  overflow-y: auto;
+}
+
+.policy-section {
+  margin-bottom: 25px;
+}
+
+.policy-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.policy-section h4 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.policy-section p,
+.policy-section li {
+  line-height: 1.6;
+  margin-bottom: 10px;
+  color: #36454F;
+}
+
+.policy-section ul {
+  padding-left: 25px;
+  margin-top: 5px;
+}
+
+.policy-section strong {
+  font-weight: bold;
+}
+
+.policy-section em,
+.policy-section i {
+  font-style: italic;
+}
+
+.policy-divider {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 30px 0;
+}
+
+/* Dark mode adjustments for policy text */
+body.dark-mode .privacy-terms-content {
+  color: #ccc; /* Lighter text for dark mode */
+}
+
+body.dark-mode .policy-section h3 {
+  color: #eee;
+}
+
+body.dark-mode .policy-section h4 {
+  color: #ddd;
+}
+
+body.dark-mode .policy-section p,
+body.dark-mode .policy-section li {
+  color: #ccc;
+}
+
+body.dark-mode .policy-divider {
+  border-top: 1px solid #555;
+}
+
+body.dark-mode .policy-section a {
+  color: #9cdcfe; /* Lighter blue for links in dark mode */
+}

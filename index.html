@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic Metadata -->
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Title -->
+  <title>Bidayatna AI | بدايتنا - Smarter Marketing Strategies (English & Arabic)</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Bidayatna AI (بدايتنا) is a free, bilingual AI chatbot that helps individuals and small businesses create smarter marketing strategies. Build your brand with intelligent support in English and Arabic.">
+  <meta name="author" content="Abdulaziz Abunayyan">
+  <meta name="keywords" content="Marketing AI, AI for Marketing, Marketing Strategy, Marketing Help, Bidayatna, Bidayatna AI, بدايتنا,Small Business Tools, Free Chatbot, Free AI Chatbot, Digital Marketing, Digital Marketing AI, English Marketing Chatbot, English Marketing AI Chatbot, Marketing Strategies For Beginners, ذكاء اصطناعي, تسويق, استراتيجيات تسويقية, تسويق رقمي, تسويق الكتروني, تسويق عبر الانترنت, تسويق عبر وسائل التواصل الاجتماعي, تسويق عبر محركات البحث, تسويق عبر البريد الالكتروني, تسويق عبر المحتوى, تسويق عبر الفيديو, تسويق عبر المدونات, تسويق عبر التطبيقات, تسويق عبر الرسائل النصية القصيرة">
+
+  <!-- Open Graph (for Facebook, LinkedIn, Instagram link sharing) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Bidayatna AI | بدايتنا - Smarter Marketing Strategies">
+  <meta property="og:description" content="Boost your business with Bidayatna AI — a free chatbot helping you build marketing strategies in English and Arabic.">
+  <meta property="og:image" content="https://bidayatna.com/og-image-mini.jpg">
+  <meta property="og:url" content="https://bidayatna.com">
+  <meta property="og:site_name" content="Bidayatna AI">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://bidayatna.com">
+
+  <!-- Robots -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#ffffff">
+  <script defer src="https://cloud.umami.is/script.js" data-website-id="5572ab36-4500-4e01-867e-d8c674b96cc7"></script>
+</head>
+<body>
+  <!-- Modal Overlay -->
+  <div id="modal-overlay" class="modal-overlay"></div>
+
+  <!-- Container for Mobile Fixed Buttons -->
+  <div class="mobile-fixed-buttons">
+    <!-- Dark Mode Toggle Button (Mobile) -->
+    <button id="dark-mode-toggle-mobile" class="dark-mode-toggle" aria-label="Toggle Dark Mode">
+        <span class="moon-icon" aria-hidden="true">
+            <!-- Replaced inline SVG with img tag -->
+            <img src="images/moon-icon.svg" alt="Moon icon for dark mode" width="20" height="20">
+        </span>
+        <span class="sun-icon" aria-hidden="true" style="display: none;">
+            <!-- Replaced inline SVG with img tag -->
+            <img src="images/sun-icon.svg" alt="Sun icon for light mode" width="20" height="20">
+        </span>
+    </button>
+
+    <!-- Hamburger menu button (hidden on desktop) -->
+    <button class="menu-toggle" aria-label="Open menu" tabindex="0">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+        <rect y="6" width="28" height="3" rx="1.5" fill="#222"/>
+        <rect y="13" width="28" height="3" rx="1.5" fill="#222"/>
+        <rect y="20" width="28" height="3" rx="1.5" fill="#222"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="main-container">
+    <!-- Hamburger Menu Content / Desktop Buttons -->
+    <div class="top-right-buttons">
+      <!-- Dark Mode Toggle Button (Desktop) -->
+      <button id="dark-mode-toggle-desktop" class="dark-mode-toggle" aria-label="Toggle Dark Mode">
+          <span class="moon-icon" aria-hidden="true">
+              <!-- Replaced inline SVG with img tag -->
+              <img src="images/moon-icon.svg" alt="Moon icon for dark mode" width="20" height="20">
+          </span>
+          <span class="sun-icon" aria-hidden="true" style="display: none;">
+              <!-- Replaced inline SVG with img tag -->
+              <img src="images/sun-icon.svg" alt="Sun icon for light mode" width="20" height="20">
+          </span>
+      </button>
+      <!-- YouTube Button -->
+      <button id="youtube-btn" aria-label="Watch Tutorials" data-modal-trigger="youtube-modal">
+        <span class="youtube-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" style="vertical-align:middle;">
+            <path d="M23.498 6.186a2.993 2.993 0 0 0-2.107-2.117C19.425 3.5 12 3.5 12 3.5s-7.425 0-9.391.569A2.993 2.993 0 0 0 .502 6.186C0 8.153 0 12 0 12s0 3.847.502 5.814a2.993 2.993 0 0 0 2.107 2.117C4.575 20.5 12 20.5 12 20.5s7.425 0 9.391-.569a2.993 2.993 0 0 0 2.107-2.117C24 15.847 24 12 24 12s0-3.847-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </span>
+      </button>
+      <!-- Privacy Button -->
+      <button id="privacy-btn" aria-label="Privacy & Terms" data-modal-trigger="privacy-modal">
+        <span class="privacy-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#1976d2" style="vertical-align:middle;">
+            <path d="M12 1l9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4zm0 2.18L5 5.09v5.91c0 4.42 2.94 8.44 7 9.74 4.06-1.3 7-5.32 7-9.74V5.09l-7-1.91zm-1 7.32h2v2h-2v-2zm0 4h2v4h-2v-4z"/>
+          </svg>
+        </span>
+      </button>
+      <!-- Contact Button -->
+      <button id="contact-btn" aria-label="Contact Us" data-modal-trigger="contact-modal">
+        <span class="contact-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#43a047" style="vertical-align:middle;">
+            <path d="M21 6.5a1 1 0 0 0-1-1h-16a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-11zm-2 0l-7 5.5-7-5.5h14zm-14 11v-8.5l7 5.5 7-5.5v8.5h-14z"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <header>
+      <div class="title-container">
+        <h1 class="title-en">Bidayatna AI</h1>
+        <span class="title-separator"></span>
+        <h1 class="title-ar">بدايتنا</h1>
+      </div>
+      <img src="images/og-image-mini.png" alt="Bidayatna AI Logo with tagline: free, fast, efficient, trustworthy AI-POWERED MARKETING STRATEGY" class="header-logo">
+      <div class="founder-container">
+        <h2 class="founder-name">Abdulaziz Abunayyan</h2>
+        <span class="founder-label">Founder</span>
+      </div>
+      <a href="https://www.linkedin.com/in/abdulaziz-abunayyan" target="_blank" class="linkedin-link">
+        <span class="linkedin-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#0077b5">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.154 1.459-2.154 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.381-1.563 2.841-1.563 3.039 0 3.6 2.001 3.6 4.601v5.595z"/>
+          </svg>
+        </span>
+        LinkedIn Profile
+      </a>
+    </header>
+
+    <!-- MARKETING STRATEGY COLUMNS START -->
+    <div class="columns-flex">
+      <div class="column">
+        <div class="column-title"><b>Business Identity</b></div>
+        <input type="text" id="brand-name" placeholder="Brand / Company Name" class="input-field" />
+        <textarea id="business-description" placeholder="Brief Description of Your Business" class="input-field textarea-field"></textarea>
+        <input type="text" id="website" placeholder="Website (if applicable)" class="input-field" />
+        <input type="text" id="industry-niche" placeholder="Industry / Niche (e.g., education, e-commerce)" class="input-field" />
+      </div>
+      <div class="column">
+        <div class="column-title"><b>Target Audience</b></div>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="current-users" placeholder="Current Number of Users / Customers" class="input-field" min="0" />
+        <input type="text" id="target-users" placeholder="Targeted Number of Users / Growth Goal" class="input-field" />
+        <div class="select-group">
+          <label for="age-range" class="group-label">User Age Range</label>
+          <select id="age-range" class="input-field select-field">
+            <option value="" disabled selected>Select an age range</option>
+            <option value="under_18">Under 18</option>
+            <option value="18-24">18–24</option>
+            <option value="25-34">25–34</option>
+            <option value="35-44">35–44</option>
+            <option value="45-54">45–54</option>
+            <option value="55-64">55–64</option>
+            <option value="65+">65+</option>
+            <option value="other">Other (Specify below)</option>
+          </select>
+          <input type="text" id="age-range-other" placeholder="Specify age range" class="input-field survey-specify-field" style="display: none; margin-top: 5px;">
+        </div>
+        <input type="text" id="locations" placeholder="Target Locations / Countries" class="input-field" />
+        <div class="checkbox-group">
+          <label class="group-label">Main Social Media Platforms Used:</label>
+          <label><input type="checkbox" name="social" value="instagram"> Instagram</label>
+          <label><input type="checkbox" name="social" value="tiktok"> TikTok</label>
+          <label><input type="checkbox" name="social" value="twitter"> Twitter</label>
+          <label><input type="checkbox" name="social" value="facebook"> Facebook</label>
+          <label><input type="checkbox" name="social" value="linkedin"> LinkedIn</label>
+          <label><input type="checkbox" name="social" value="other"> Other</label>
+        </div>
+        <input type="text" id="languages" placeholder="Language(s) Spoken by Audience" class="input-field" />
+      </div>
+      <div class="column">
+        <div class="column-title"><b>Marketing Goals</b></div>
+        <div class="checkbox-group">
+          <label class="group-label">What Are Your Primary Goals?</label>
+          <label><input type="checkbox" name="goals" value="awareness"> Brand awareness</label>
+          <label><input type="checkbox" name="goals" value="leads"> Lead generation</label>
+          <label><input type="checkbox" name="goals" value="conversions"> Conversions</label>
+          <label><input type="checkbox" name="goals" value="engagement"> Engagement</label>
+          <label><input type="checkbox" name="goals" value="other"> Other</label>
+        </div>
+        <input type="text" id="goals-timeframe" placeholder="Timeframe for These Goals (e.g., 3 months, 1 year)" class="input-field" />
+        <input type="text" id="goals-roi" placeholder="Expected ROI or Revenue Goal (if known)" class="input-field" />
+      </div>
+    </div>
+    <div class="columns-flex">
+      <div class="column">
+        <div class="column-title"><b>Current Strategy &amp; Resources</b></div>
+        <div class="select-group">
+          <label class="group-label">Do You Have a Marketing Strategy Already?</label>
+          <select id="strategy-status" class="input-field select-field">
+            <option value="" disabled selected>Select an option</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+            <option value="rough">Rough idea</option>
+          </select>
+        </div>
+        <textarea id="current-strategy-description" placeholder="Describe Your Current Strategy (if any)" class="input-field textarea-field"></textarea>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="marketing-budget" placeholder="Marketing Budget (Monthly / Total)" class="input-field" min="0" />
+        <div class="radio-group">
+          <label class="group-label">In-House or Outsourced Marketing?</label>
+          <label><input type="radio" name="marketing_source" value="in-house"> In-house</label>
+          <label><input type="radio" name="marketing_source" value="agency"> Agency</label>
+          <label><input type="radio" name="marketing_source" value="freelancer"> Freelancer</label>
+          <label><input type="radio" name="marketing_source" value="none"> None</label>
+        </div>
+      </div>
+      <div class="column">
+        <div class="column-title"><b>Creative Ideas &amp; Preferences</b></div>
+        <textarea id="marketing-ideas" placeholder="Any Marketing Ideas You’d Like to Explore?" class="input-field textarea-field"></textarea>
+        <input type="text" id="brand-voice" placeholder="Brand Voice or Tone (e.g., playful, formal)" class="input-field" />
+        <input type="text" id="content-types" placeholder="Preferred Content Types (Videos, blogs, emails, etc.)" class="input-field" />
+        <textarea id="competitors" placeholder="Competitors You Admire or Want to Outperform (Optional)" class="input-field textarea-field"></textarea>
+      </div>
+    </div>
+    <!-- MARKETING STRATEGY COLUMNS END -->
+
+    <!-- Submit Button -->
+    <div class="submit-container">
+      <button id="submit-btn" class="submit-button">Generate Strategy</button>
+      <div class="disclaimer">
+        <p><strong>Note:</strong> Any unanswered questions will be considered by the AI when generating your strategy (e.g., if you leave ROI blank, the AI might suggest a target ROI based on other inputs). </p>
+        <p>The more information you provide, the more tailored and accurate your AI-generated marketing strategy will be.</p>
+      </div>
+    </div>
+
+    <!-- Survey Trigger Button -->
+    <div class="survey-trigger-container">
+      <!-- Added data-modal-trigger -->
+      <button id="survey-trigger-btn" class="survey-trigger-button" data-modal-trigger="survey-modal">Take a Quick Survey?</button>
+    </div>
+
+    <!-- Survey Modal -->
+    <!-- Added modal class and data-modal attribute -->
+    <div id="survey-modal" class="modal" data-modal="survey-modal" aria-hidden="true">
+      <div class="modal-content survey-modal-content">
+        <!-- Added modal-close class -->
+        <span class="close modal-close" aria-label="Close Survey">&times;</span>
+        <h2>User Survey</h2>
+        <form id="user-survey-form">
+          
+          <!-- How did you hear -->
+          <div class="survey-question">
+            <label class="group-label">How did you hear about this website? <span class="required">*</span></label>
+            <div class="radio-group survey-radio-group" data-required="true" data-required-msg="Please select how you heard about us.">
+              <label><input type="radio" name="referral" value="social_media"> Social Media (e.g., Twitter, LinkedIn)</label>
+              <label><input type="radio" name="referral" value="search_engine"> Search Engine (e.g., Google)</label>
+              <label><input type="radio" name="referral" value="friend_colleague"> Friend or Colleague</label>
+              <label><input type="radio" name="referral" value="online_ad"> Online Advertisement</label>
+              <label><input type="radio" name="referral" value="blog_article"> Blog Post or Article</label>
+              <label><input type="radio" name="referral" value="other"> Other (Please specify)</label>
+            </div>
+            <!-- Specify Social Media -->
+            <div id="social-media-specify" style="display: none; margin-left: 25px; margin-top: 8px;">
+              <label class="group-label" style="font-weight: normal;">Which social media platform?</label>
+              <div class="checkbox-group survey-checkbox-group">
+                <label><input type="checkbox" name="social_platform" value="twitter"> Twitter</label>
+                <label><input type="checkbox" name="social_platform" value="linkedin"> LinkedIn</label>
+                <label><input type="checkbox" name="social_platform" value="facebook"> Facebook</label>
+                <label><input type="checkbox" name="social_platform" value="instagram"> Instagram</label>
+                <label><input type="checkbox" name="social_platform" value="tiktok"> TikTok</label>
+                <label><input type="checkbox" name="social_platform" value="other_social"> Other</label>
+              </div>
+            </div>
+            <!-- Specify Other Referral -->
+            <input type="text" id="referral-other-specify" placeholder="Please specify" class="input-field survey-specify-field" style="display: none;">
+          </div>
+
+          <!-- Purpose -->
+          <div class="survey-question">
+            <label class="group-label">What is your primary purpose for using this website? <span class="required">*</span></label>
+            <div class="radio-group survey-radio-group" data-required="true" data-required-msg="Please select your primary purpose.">
+              <label><input type="radio" name="purpose" value="generate_strategy"> Generate a marketing strategy for my business/project</label>
+              <label><input type="radio" name="purpose" value="learn_marketing"> Learn about marketing strategies</label>
+              <label><input type="radio" name="purpose" value="explore_ai"> Explore AI capabilities</label>
+              <label><input type="radio" name="purpose" value="compare_tools"> Compare with other marketing tools</label>
+              <label><input type="radio" name="purpose" value="personal_interest"> Personal interest / Curiosity</label>
+              <label><input type="radio" name="purpose" value="other_purpose"> Other</label>
+            </div>
+          </div>
+
+          <!-- Ease of Use -->
+          <div class="survey-question">
+            <label class="group-label">How easy was it to navigate and use the website? <span class="required">*</span></label>
+            <div class="radio-group survey-radio-group" data-required="true" data-required-msg="Please rate the ease of use.">
+              <label><input type="radio" name="ease_of_use" value="5"> Very Easy</label>
+              <label><input type="radio" name="ease_of_use" value="4"> Easy</label>
+              <label><input type="radio" name="ease_of_use" value="3"> Neutral</label>
+              <label><input type="radio" name="ease_of_use" value="2"> Difficult</label>
+              <label><input type="radio" name="ease_of_use" value="1"> Very Difficult</label>
+            </div>
+          </div>
+
+          <!-- Strategy Quality -->
+          <div class="survey-question">
+            <label class="group-label">How satisfied are you with the quality of the marketing strategy generated? (If applicable)</label>
+            <div class="radio-group survey-radio-group">
+              <label><input type="radio" name="strategy_quality" value="5"> Very Satisfied</label>
+              <label><input type="radio" name="strategy_quality" value="4"> Satisfied</label>
+              <label><input type="radio" name="strategy_quality" value="3"> Neutral</label>
+              <label><input type="radio" name="strategy_quality" value="2"> Dissatisfied</label>
+              <label><input type="radio" name="strategy_quality" value="1"> Very Dissatisfied</label>
+              <label><input type="radio" name="strategy_quality" value="na"> N/A - Didn't generate a strategy</label>
+            </div>
+          </div>
+
+          <!-- Missing Features -->
+          <div class="survey-question">
+            <label for="missing-features" class="group-label">Are there any features or information you wish the website offered?</label>
+            <textarea id="missing-features" name="missing_features" placeholder="e.g., specific marketing channels, budget templates, competitor analysis tools" class="input-field textarea-field"></textarea>
+          </div>
+
+          <!-- Suggestions -->
+          <div class="survey-question">
+            <label for="suggestions" class="group-label">Do you have any suggestions for improvement?</label>
+            <textarea id="suggestions" name="suggestions" placeholder="Your feedback is valuable!" class="input-field textarea-field"></textarea>
+          </div>
+
+          <!-- Overall Satisfaction -->
+          <div class="survey-question">
+            <label class="group-label">Overall, how satisfied are you with your experience on this website? <span class="required">*</span></label>
+            <div class="radio-group survey-radio-group" data-required="true" data-required-msg="Please rate your overall satisfaction.">
+              <label><input type="radio" name="overall_satisfaction" value="5"> Very Satisfied</label>
+              <label><input type="radio" name="overall_satisfaction" value="4"> Satisfied</label>
+              <label><input type="radio" name="overall_satisfaction" value="3"> Neutral</label>
+              <label><input type="radio" name="overall_satisfaction" value="2"> Dissatisfied</label>
+              <label><input type="radio" name="overall_satisfaction" value="1"> Very Dissatisfied</label>
+            </div>
+          </div>
+
+          <div class="submit-container" style="margin-bottom: 20px;">
+            <button type="submit" class="submit-button">Submit Survey</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- YouTube Modal -->
+    <div id="youtube-modal" class="modal" data-modal="youtube-modal" aria-hidden="true">
+      <div class="modal-content youtube-modal-content">
+        <span class="close modal-close" aria-label="Close Tutorials">&times;</span>
+        <h2>Video Tutorials</h2>
+        <div class="video-container">
+          <div class="video-box">
+            <h3>English Tutorial</h3>
+            <iframe src="https://www.youtube.com/embed/EnwYhTXCv5Q" title="English Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <div class="video-box">
+            <h3>Arabic Tutorial</h3>
+            <iframe src="https://www.youtube.com/embed/9CJea_qgEM0" title="Arabic Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacy-modal" class="modal" data-modal="privacy-modal" aria-hidden="true">
+      <div class="modal-content privacy-terms-content">
+        <span class="close modal-close" aria-label="Close Privacy & Terms">&times;</span>
+        <h2>Privacy Policy & Terms of Service</h2>
+
+        <div class="policy-section">
+          <h3>Privacy Policy</h3>
+          <p><strong>Last Updated:</strong> May 4, 2025</p>
+          <p>Welcome to Bidayatna AI (the "Website"), located at bidayatna.com. We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our Website.</p>
+
+          <h4>1. Information We Collect</h4>
+          <p>We may collect information about you in a variety of ways. The information we may collect on the Website includes:</p>
+          <p><strong>a) Personal Data:</strong> While using our Website, specifically when you use the marketing strategy generation tool, you may voluntarily provide us with certain personally identifiable information. This includes: Brand/Company Name, Business Description, Website URL, Industry/Niche, User counts, Growth Goals, Age Range, Locations, Social Platforms, Audience Language(s), Marketing Goals, Timeframe, ROI, Budget, Marketing Source, Ideas, Brand Voice, Content Types, Competitors.</p>
+          <p><strong>Important Note:</strong> This information is used *solely* for generating the marketing strategy via the Together.ai API during your active session. We **do not** store this information on our servers after your session ends.</p>
+          <p><strong>b) Survey Data:</strong> If you participate in our optional survey (via FormSubmit.co), we collect your responses (referral source, purpose, ease of use, satisfaction, feedback) to improve our Website. FormSubmit.co has its own privacy policy.</p>
+          <p><strong>c) Usage Data (Analytics):</strong> We use Umami Cloud Analytics (privacy-focused) to collect anonymized data (browser, OS, pages visited, time spent, referrer, general location) to understand user behavior. Umami anonymizes IP addresses and does not use cross-site tracking cookies.</p>
+          <p><strong>d) Cookies and Tracking Technologies:</strong> We use essential cookies for basic functionality (e.g., dark mode) and a cookie consent banner. Umami analytics does not rely on traditional tracking cookies. You can manage cookie settings in your browser, but disabling essential cookies may affect site functionality.</p>
+
+          <h4>2. Use of Your Information</h4>
+          <p>We use collected information to:</p>
+          <ul>
+            <li>Generate the AI marketing strategy (via Together.ai).</li>
+            <li>Analyze survey responses to improve the Website.</li>
+            <li>Monitor usage trends via privacy-respecting analytics (Umami).</li>
+            <li>Operate and maintain the Website.</li>
+            <li>Respond to contact requests.</li>
+          </ul>
+
+          <h4>3. Disclosure of Your Information</h4>
+          <p>We do not sell or rent your data. We may disclose information to:</p>
+          <ul>
+            <li><strong>AI Service Provider (Together.ai):</strong> Input data is sent to their API for processing according to their policy. We don't store it.</li>
+            <li><strong>Survey Processor (FormSubmit.co):</strong> Survey responses are processed by them according to their policy.</li>
+            <li><strong>Analytics Provider (Umami Cloud):</strong> Anonymized usage data is processed by them.</li>
+            <li><strong>Legal Requirements:</strong> If required by law or valid legal requests.</li>
+          </ul>
+
+          <h4>4. Security of Your Information</h4>
+          <p>We use reasonable security measures, but no system is impenetrable. Data processed by third parties is subject to their security practices.</p>
+
+          <h4>5. Policy for Children</h4>
+          <p>We do not knowingly collect data from children under 13. Contact us if you believe we have.</p>
+
+          <h4>6. Your Data Protection Rights</h4>
+          <p>Depending on your location, you may have rights to access, rectify, erase, restrict, object to processing, or port your data. Contact us to make requests (primarily applies to email correspondence or data held by processors).</p>
+
+          <h4>7. Changes to This Privacy Policy</h4>
+          <p>We may update this policy. Changes are effective when posted here. Check the "Last Updated" date.</p>
+
+          <h4>8. Contact Us</h4>
+          <p>Email: <a href="mailto:support@bidayatna.com">support@bidayatna.com</a> or <a href="mailto:bidayatna.ai@gmail.com">bidayatna.ai@gmail.com</a></p>
+        </div>
+
+        <hr class="policy-divider">
+
+        <div class="policy-section">
+          <h3>Terms of Service</h3>
+          <p><strong>Last Updated:</strong> May 4, 2025</p>
+          <p>By accessing bidayatna.com ("Website"), you agree to these Terms governing your use of the Website and its AI marketing strategy generator ("Service").</p>
+
+          <h4>1. Use of the Service</h4>
+          <ul>
+            <li><strong>Eligibility:</strong> Must be 13+ years old.</li>
+            <li><strong>Permitted Use:</strong> Non-exclusive, non-transferable license for personal/internal business use according to these Terms.</li>
+            <li><strong>Prohibited Use:</strong> No illegal activities, harming minors, spamming, impersonation, interfering with others' use, unauthorized access, reverse engineering, etc.</li>
+          </ul>
+
+          <h4>2. AI-Generated Content</h4>
+          <ul>
+            <li><strong>Nature of Output:</strong> Provided "as is" via AI (Together.ai). May be inaccurate or incomplete.</li>
+            <li><strong>No Guarantees:</strong> We make no warranties regarding accuracy, reliability, or suitability.</li>
+            <li><strong>User Responsibility:</strong> You are solely responsible for reviewing, evaluating, and adapting generated strategies. Reliance is at your own risk.</li>
+            <li><strong>No Professional Advice:</strong> Content is not professional marketing, legal, or financial advice.</li>
+          </ul>
+
+          <h4>3. Intellectual Property</h4>
+          <ul>
+            <li><strong>Website Content:</strong> Owned by Bidayatna AI and its licensors, protected by copyright/trademark laws.</li>
+            <li><strong>User Input:</strong> You retain ownership of your input.</li>
+            <li><strong>Generated Strategies:</strong> You may use strategies based on your input; we claim no ownership over the output for you.</li>
+          </ul>
+
+          <h4>4. Third-Party Services</h4>
+          <p>Use of integrated services (Together.ai, FormSubmit.co, Umami Cloud, social media links) is subject to their respective terms and policies. We are not responsible for them.</p>
+
+          <h4>5. Disclaimers and Limitation of Liability</h4>
+          <ul>
+            <li><strong>Disclaimer of Warranties:</strong> WEBSITE AND SERVICE ARE PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND (EXPRESS OR IMPLIED), INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.</li>
+            <li><strong>Limitation of Liability:</strong> BIDAYATNA AI IS NOT LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES (INCLUDING LOSS OF PROFITS, DATA, GOODWILL) ARISING FROM YOUR USE OR INABILITY TO USE THE SERVICE, THIRD-PARTY CONDUCT, CONTENT OBTAINED, OR UNAUTHORIZED ACCESS, REGARDLESS OF LEGAL THEORY.</li>
+          </ul>
+
+          <h4>6. Indemnification</h4>
+          <p>You agree to indemnify Bidayatna AI against claims/damages arising from your use of the Website/Service or breach of these Terms.</p>
+
+          <h4>7. Termination</h4>
+          <p>We may terminate your access without notice for any reason, including breach of Terms.</p>
+
+          <h4>8. Governing Law</h4>
+          <p>These Terms are governed by the laws of [Specify Jurisdiction, e.g., Saudi Arabia], without regard to conflict of law provisions. <em>(Note: Please replace '[Specify Jurisdiction]' with the appropriate legal jurisdiction).</em></p>
+
+          <h4>9. Changes to Terms</h4>
+          <p>We may modify these Terms. Material changes will be noted by updating the "Last Updated" date. Continued use implies acceptance of revised terms.</p>
+
+          <h4>10. Contact Us</h4>
+          <p>Email: <a href="mailto:support@bidayatna.com">support@bidayatna.com</a> or <a href="mailto:bidayatna.ai@gmail.com">bidayatna.ai@gmail.com</a></p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="modal" data-modal="contact-modal" aria-hidden="true">
+      <div class="modal-content contact-content">
+        <span class="close modal-close" aria-label="Close Contact Info">&times;</span>
+        <h2>Contact Us</h2>
+        <ul class="contact-list">
+          <li>Support Email: <a href="mailto:support@bidayatna.com">support@bidayatna.com</a></li>
+          <li>LinkedIn: <a href="https://www.linkedin.com/in/abdulaziz-abunayyan/" target="_blank" rel="noopener noreferrer">Abdulaziz Abunayyan</a></li>
+          <li>Instagram: <a href="https://www.instagram.com/bidayatna.ai/" target="_blank" rel="noopener noreferrer">@bidayatna.ai</a></li>
+          <li>X (Twitter): <a href="https://x.com/bidayatna" target="_blank" rel="noopener noreferrer">@bidayatna</a></li>
+          <li>Facebook: <a href="https://www.facebook.com/profile.php?id=61575194477660" target="_blank" rel="noopener noreferrer">Bidayatna AI</a></li>
+          <li>General Inquiries: <a href="mailto:bidayatna.ai@gmail.com">bidayatna.ai@gmail.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div> <!-- End main-container -->
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+  <!-- Cookie Consent Banner -->
+  <div id="cookie-consent-banner" class="cookie-consent-banner" style="display: none;">
+    <p>We use essential cookies to ensure the basic functionality of our website (like dark mode preference) and privacy-friendly analytics (Umami) to understand how you use the site and improve it. We do not use tracking cookies. By continuing to use this site, you acknowledge this. You can learn more in our <a href="#" data-modal-trigger="privacy-modal-from-cookie">Privacy Policy</a>.</p>
+    <button id="accept-cookies-btn" class="accept-cookies-button">Got it!</button>
+  </div>
