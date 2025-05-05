@@ -1281,3 +1281,109 @@ body.dark-mode .policy-divider {
 body.dark-mode .policy-section a {
   color: #9cdcfe; /* Lighter blue for links in dark mode */
 }
+
+
+/* Add this to your style.css file */
+
+/* Loading indicator styles */
+.loading-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    color: white;
+}
+
+.spinner {
+    border: 5px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top: 5px solid #87CEEB;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-top: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Strategy modal specific styles */
+.strategy-modal-content {
+    max-width: 800px;
+    text-align: left;
+}
+
+.strategy-content {
+    margin: 20px 0;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.strategy-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.action-button {
+    padding: 10px 20px;
+    background-color: #87CEEB;
+    color: #222;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.action-button:hover {
+    background-color: #6ab8d8;
+}
+
+/* Dark mode adjustments */
+body.dark-mode .action-button {
+    background-color: #87CEEB;
+    color: #111111;
+}
+
+body.dark-mode .action-button:hover {
+    background-color: #6ab8d8;
+}
+
+/* Style for the new input group containing budget amount and period */
+.input-group {
+  display: flex;
+  flex-direction: column; /* Stack vertically by default */
+  gap: 10px; /* Space between amount and period */
+  margin-bottom: 15px; /* Maintain spacing below the group */
+  width: 100%; /* Take full width of the column */
+}
+
+.input-group .input-field {
+  margin-bottom: 0; /* Remove default bottom margin from fields inside the group */
+}
+
+/* Optional: If you want them side-by-side on wider screens */
+@media (min-width: 480px) { /* Adjust breakpoint as needed */
+  .input-group {
+    flex-direction: row; /* Align side-by-side */
+    align-items: center; /* Align items vertically */
+  }
+  .input-group .input-field:first-child {
+    flex-grow: 1; /* Allow amount field to take more space */
+  }
+  .input-group .select-field {
+    flex-basis: 150px; /* Give the dropdown a specific base width */
+    flex-shrink: 0;
+  }
+}
