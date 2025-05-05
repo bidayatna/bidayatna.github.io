@@ -115,6 +115,7 @@
         <span class="title-separator"></span>
         <h1 class="title-ar">بدايتنا</h1>
       </div>
+      <div class="beta-version">beta v0.0.2</div>
       <img src="images/og-image-mini.png" alt="Bidayatna AI Logo with tagline: free, fast, efficient, trustworthy AI-POWERED MARKETING STRATEGY" class="header-logo">
       <div class="founder-container">
         <h2 class="founder-name">Abdulaziz Abunayyan</h2>
@@ -168,6 +169,7 @@
           <label><input type="checkbox" name="social" value="linkedin"> LinkedIn</label>
           <label><input type="checkbox" name="social" value="other"> Other</label>
         </div>
+        <input type="text" id="social-other-description" placeholder="Specify other platform(s)" class="input-field survey-specify-field" style="display: none; margin-top: 5px;">
         <input type="text" id="languages" placeholder="Language(s) Spoken by Audience" class="input-field" />
       </div>
       <div class="column">
@@ -180,8 +182,9 @@
           <label><input type="checkbox" name="goals" value="engagement"> Engagement</label>
           <label><input type="checkbox" name="goals" value="other"> Other</label>
         </div>
+        <input type="text" id="goals-other-description" placeholder="Specify other goal(s)" class="input-field survey-specify-field" style="display: none; margin-top: 5px;">
         <input type="text" id="goals-timeframe" placeholder="Timeframe for These Goals (e.g., 3 months, 1 year)" class="input-field" />
-        <input type="text" id="goals-roi" placeholder="Expected ROI or Revenue Goal (if known)" class="input-field" />
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="goals-roi" placeholder="Expected ROI or Revenue Goal (SAR)" class="input-field" min="0" />
       </div>
     </div>
     <div class="columns-flex">
@@ -197,7 +200,15 @@
           </select>
         </div>
         <textarea id="current-strategy-description" placeholder="Describe Your Current Strategy (if any)" class="input-field textarea-field"></textarea>
-        <input type="text" inputmode="numeric" pattern="[0-9]*" id="marketing-budget" placeholder="Marketing Budget (Monthly / Total)" class="input-field" min="0" />
+        <input type="text" inputmode="numeric" pattern="[0-9]*" id="marketing-budget-amount" placeholder="Marketing Budget Amount (SAR)" class="input-field" min="0" />
+        <select id="marketing-budget-period" class="input-field select-field">
+          <option value="" disabled selected>Select Budget Period</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+          <option value="total">Total Project</option>
+          <option value="other">Other (Specify below)</option>
+        </select>
+        <input type="text" id="marketing-budget-period-other" placeholder="Specify budget period" class="input-field survey-specify-field" style="display: none; margin-top: 5px;">
         <div class="radio-group">
           <label class="group-label">In-House or Outsourced Marketing?</label>
           <label><input type="radio" name="marketing_source" value="in-house"> In-house</label>
@@ -238,7 +249,11 @@
         <!-- Added modal-close class -->
         <span class="close modal-close" aria-label="Close Survey">&times;</span>
         <h2>User Survey</h2>
-        <form id="user-survey-form">
+        <form id="user-survey-form" action="https://formsubmit.co/bidayatna.ai@gmail.com" method="POST">
+            <!-- Add these hidden fields for FormSubmit configuration -->
+            <input type="hidden" name="_subject" value="Bidayatna AI Website Survey Submission">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://bidayatna.com?survey=thanks">
           
           <!-- How did you hear -->
           <div class="survey-question">
