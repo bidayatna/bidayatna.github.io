@@ -184,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Together.ai API Integration Function ---
     async function generateAIStrategy(prompt) {
-        const API_KEY = "20f36cd0f3183d66819a4947544b83e190330eb159c73ceb968419324e5e648e";
+        const API_KEY = "tgp_v1_pbMSRFsUSwEdSR6hQTMsUaIuB-qEPNS2fjd7vYIOGJE";
         const API_URL = "https://api.together.xyz/v1/completions";
         const loadingElement = document.createElement("div");
         loadingElement.className = "loading-indicator";
