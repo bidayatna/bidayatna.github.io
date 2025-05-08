@@ -548,9 +548,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     } // End of if(surveyForm)
 
-    //Vercel Analytics
+    //Vercel optional sections
     npm i @vercel/analytics
-    import { Analytics } from "@vercel/analytics/react"
+    npm i @vercel/speed-insights
+    
     
     // --- Cookie Consent Logic ---
     const cookieBanner = document.getElementById("cookie-consent-banner");
