@@ -547,11 +547,6 @@ document.addEventListener("DOMContentLoaded", () => {
             window.history.replaceState({path: newUrl}, "", newUrl);
         }
     } // End of if(surveyForm)
-
-    //Vercel optional sections
-    npm i @vercel/analytics
-    npm i @vercel/speed-insights
-    
     
     // --- Cookie Consent Logic ---
     const cookieBanner = document.getElementById("cookie-consent-banner");
