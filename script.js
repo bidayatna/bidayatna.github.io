@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const loadingElement = document.createElement("div");
         loadingElement.className = "loading-indicator";
         loadingElement.innerHTML = "<p>Generating your personalized marketing strategy...</p><div class=\"spinner\"></div>";
-        
+
         try {
             document.body.appendChild(loadingElement);
             const response = await fetch(API_URL, {
@@ -329,13 +329,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Primary Goals"
                     // Timeframe is handled conditionally below
                 ];
-                
+
                 const isEmpty = (value === null || value === "" || value === undefined || (Array.isArray(value) && value.length === 0));
-                
+
                 if (isEmpty && notProvidedExceptions.includes(label)) {
                     emptyText = "[Not Provided]";
                 }
-                
+
                 // Conditional logic for Timeframe
                 if (label === "Timeframe for Goals" && (!formData.primaryGoals || formData.primaryGoals.length === 0)) {
                     emptyText = "[Not Provided]";
@@ -539,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             // If valid, FormSubmit handles the submission
         });
-        
+
         // Check for survey=thanks in URL
         if (window.location.search.includes("survey=thanks")) {
             alert("Thank you for your feedback! We appreciate your input.");
@@ -547,7 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.history.replaceState({path: newUrl}, "", newUrl);
         }
     } // End of if(surveyForm)
-    
+
     // --- Cookie Consent Logic ---
     const cookieBanner = document.getElementById("cookie-consent-banner");
     const acceptCookiesBtn = document.getElementById("accept-cookies-btn");
