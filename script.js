@@ -199,9 +199,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Authorization": `Bearer ${API_KEY}`
                 },
                 body: JSON.stringify({
-                    model: "togethercomputer/llama-3-70b-instruct",
+                    model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
                     prompt: prompt,
-                    max_tokens: 3000,
+                    max_tokens: 500,
                     temperature: 0.7,
                     top_p: 0.9,
                     stop: ["", "\n\n"]
