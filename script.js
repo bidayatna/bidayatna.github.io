@@ -184,9 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- MODIFIED Together.ai API Integration Function (Uses Serverless Proxy) ---
     async function generateAIStrategy(promptText) {
-        // IMPORTANT: Replace with the actual URL of YOUR deployed serverless function
         const proxyApiUrl = "/api/together-ai-proxy"; // For Vercel
-        // const proxyApiUrl = "/api/together-ai-proxy"; // Example for Vercel
 
         const loadingElement = document.createElement("div");
         loadingElement.className = "loading-indicator";
@@ -199,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ prompt: promptText }), // Send prompt in the request body
+                body: JSON.stringify({ prompt: promptText }),
             });
 
             if (document.body.contains(loadingElement)) {
@@ -207,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (!response.ok) {
-                const errorData = await response.json(); // Attempt to parse error response
+                const errorData = await response.json();
                 console.error("Proxy API Error:", response.status, errorData);
                 throw new Error(`Proxy API request failed with status ${response.status}: ${errorData.error || response.statusText}`);
             }
@@ -218,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return data.choices[0].text.trim();
             } else {
                 console.error("Invalid response structure from proxy:", data);
-                return "No valid response from AI.";
+                return "No valid response from AI."; // Or a more descriptive error
             }
 
         } catch (error) {
@@ -234,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Strategy Generation Button Logic (Using MODIFIED Together.ai function) ---
     if (submitBtn) {
         submitBtn.addEventListener("click", async () => {
-            // Validation and Data Gathering (This part remains the same as original)
             const formData = {};
             let validationPassed = true;
             let firstErrorElement = null;
@@ -324,21 +321,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Constructing the prompt (This part remains the same as original)
-            let prompt = "Generate a comprehensive marketing strategy based on the following business details:\n";
-            const addLine = (label, value, emptyText = "[User wants AI to determine/suggest]") => {
+            let prompt = "You are an expert marketing strategist. Analyze the following business details to generate a comprehensive marketing strategy.\n";
+            prompt += "The primary target market is the Middle East, with a strong emphasis on Saudi Arabia, though the strategy should also consider broader international appeal if appropriate for the business type.\n";
+            prompt += "All financial figures, especially budget allocations and ROI, must be presented in SAR (Saudi Riyal). Ensure all timeframes mentioned are specific (e.g., in days, weeks, months, or years).\n";
+            prompt += "\nBusiness Information Provided:\n";
+
+            const addLine = (label, value, emptyText = "[AI to determine/suggest based on other inputs and industry best practices]") => {
                 const notProvidedExceptions = [
                     "Website", "Current Users/Customers", "Target Locations / Countries",
                     "Languages Spoken", "Primary Goals"
                 ];
                 const isEmpty = (value === null || value === "" || value === undefined || (Array.isArray(value) && value.length === 0));
-                if (isEmpty && notProvidedExceptions.includes(label)) emptyText = "[Not Provided]";
-                if (label === "Timeframe for Goals" && (!formData.primaryGoals || formData.primaryGoals.length === 0)) emptyText = "[Not Provided]";
+                
+                let effectiveEmptyText = emptyText;
+                if (isEmpty && notProvidedExceptions.includes(label)) {
+                    effectiveEmptyText = "[Not Provided by User]";
+                }
+                if (label === "Timeframe for Goals" && (!formData.primaryGoals || formData.primaryGoals.length === 0)) {
+                    effectiveEmptyText = "[Not Provided by User]";
+                }
 
                 if (!isEmpty) {
                     prompt += `- ${label}: ${Array.isArray(value) ? value.join(", ") : value}\n`;
                 } else {
-                    prompt += `- ${label}: ${emptyText}\n`;
+                    prompt += `- ${label}: ${effectiveEmptyText}\n`;
                 }
             };
 
@@ -382,27 +388,21 @@ document.addEventListener("DOMContentLoaded", () => {
             addLine("Preferred Content Types", formData.contentTypes);
             addLine("Competitors to Admire/Outperform", formData.competitors);
 
-            prompt += "\nPlease provide a detailed, actionable marketing strategy. Include sections for: Executive Summary, Target Audience Deep Dive, Key Marketing Objectives (SMART), Core Messaging & Positioning, Recommended Marketing Channels & Tactics (with rationale), Content Strategy Outline, Budget Allocation Suggestions (if budget provided, otherwise general guidance), KPIs & Measurement Plan, and a Timeline/Roadmap. The strategy should be professional, insightful, and tailored to the provided information.";
+            prompt += "\nRequired Strategy Structure: Please provide a detailed, actionable marketing strategy. It must include these sections: Executive Summary, Target Audience Deep Dive (with consideration for the Saudi Arabian market), Key Marketing Objectives (SMART), Core Messaging & Positioning, Recommended Marketing Channels & Tactics (with rationale), Content Strategy Outline, Budget Allocation Suggestions (in SAR), KPIs & Measurement Plan, and a detailed Timeline/Roadmap with clear durations.";
+            prompt += "\nIMPORTANT INSTRUCTION: Generate only the marketing strategy content. Do not include any conversational notes, meta-commentary about the prompt, or restate the instructions given to you. Focus solely on delivering the professional strategy document.";
 
-            console.log("Generated Prompt for AI:", prompt);
+            console.log("SCRIPT_LOG: Generated Prompt for AI:", prompt);
 
-            // Call the MODIFIED function to get the AI strategy via proxy
             const aiStrategy = await generateAIStrategy(prompt);
 
-            if (aiStrategy) {
-                // Display the strategy (e.g., in a modal or a new section)
-                // For now, let's just alert it or log it
-                console.log("AI Generated Strategy:", aiStrategy);
-                // You would replace this with your actual display logic
-                // For example, creating a new modal or div to show the strategy:
+            if (aiStrategy && aiStrategy !== "No valid response from AI.") {
+                console.log("SCRIPT_LOG: AI Generated Strategy Received:", aiStrategy.substring(0, 200) + "...");
                 const strategyModalContent = document.createElement("div");
-                strategyModalContent.style.whiteSpace = "pre-wrap"; // Preserve formatting
+                strategyModalContent.style.whiteSpace = "pre-wrap";
                 strategyModalContent.textContent = aiStrategy;
                 
-                // Example: Open a new modal to display the strategy
-                // This assumes you have a generic modal structure or can create one
                 const resultModal = document.createElement("div");
-                resultModal.className = "modal is-open"; // Add classes to make it visible
+                resultModal.className = "modal is-open";
                 resultModal.setAttribute("data-modal", "strategy-result-modal");
                 resultModal.setAttribute("aria-hidden", "false");
                 const resultContent = document.createElement("div");
@@ -412,7 +412,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 closeBtn.innerHTML = "&times;";
                 closeBtn.onclick = () => {
                     closeModal(resultModal);
-                    // Optional: remove the modal from DOM after closing if it was dynamically added
                     if (document.body.contains(resultModal)) {
                         document.body.removeChild(resultModal);
                     }
@@ -424,11 +423,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 resultContent.appendChild(strategyModalContent);
                 resultModal.appendChild(resultContent);
                 document.body.appendChild(resultModal);
-                showOverlay(); // Show overlay if not already visible
-                openModal("strategy-result-modal"); // This might be redundant if classes are set correctly
+                showOverlay();
+                openModal("strategy-result-modal");
             } else {
-                // Error already handled in generateAIStrategy
-                console.log("Strategy generation failed or returned null.");
+                console.error("SCRIPT_LOG: Strategy generation failed or returned an invalid/empty response.");
+                alert("Strategy generation failed. The AI did not provide a valid response. Please check the console for more details or try adjusting your inputs.");
             }
         });
     }
@@ -449,15 +448,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     missingRequired = true;
                     const msg = group.dataset.requiredMsg || "This field is required.";
                     alert(msg);
-                    // Optionally, focus the first input of the group or highlight the group
                     if (inputs.length > 0) inputs[0].focus();
                 }
             });
 
             if (missingRequired) {
-                event.preventDefault(); // Stop form submission
+                event.preventDefault();
             }
-            // If submission proceeds, it will go to FormSubmit.co as configured in HTML
         });
     }
 
@@ -470,23 +467,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const checkOther = () => {
                 otherInputElement.style.display = (selectElement.value === "other") ? "block" : "none";
                 if (selectElement.value !== "other") {
-                    otherInputElement.value = ""; // Clear if not "other"
+                    otherInputElement.value = "";
                 }
             };
             selectElement.addEventListener("change", checkOther);
-            checkOther(); // Initial check on page load
+            checkOther();
         }
     }
 
-    setupConditionalInput("social-platforms-select", "social-other-description"); // Assuming you change checkbox to select or adapt logic
-    setupConditionalInput("marketing-goals-select", "goals-other-description"); // Assuming you change checkbox to select or adapt logic
     setupConditionalInput("marketing-budget-period", "marketing-budget-period-other");
-    // Note: The original HTML uses checkboxes for social platforms and goals.
-    // The setupConditionalInput is designed for select elements.
-    // You'll need to adjust your HTML or this JS if you keep checkboxes for those.
-    // For checkboxes, you might check if the 'other' checkbox is checked.
 
-    // Example for checkbox-based "Other" field (Social Media):
     const socialOtherCheckbox = document.querySelector("input[name=\"social\"][value=\"other\"]");
     const socialOtherDescriptionInput = document.getElementById("social-other-description");
     if (socialOtherCheckbox && socialOtherDescriptionInput) {
@@ -495,10 +485,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!socialOtherCheckbox.checked) socialOtherDescriptionInput.value = "";
         };
         socialOtherCheckbox.addEventListener("change", checkSocialOther);
-        checkSocialOther(); // Initial check
+        checkSocialOther();
     }
 
-    // Example for checkbox-based "Other" field (Marketing Goals):
     const goalsOtherCheckbox = document.querySelector("input[name=\"goals\"][value=\"other\"]");
     const goalsOtherDescriptionInput = document.getElementById("goals-other-description");
     if (goalsOtherCheckbox && goalsOtherDescriptionInput) {
@@ -507,7 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!goalsOtherCheckbox.checked) goalsOtherDescriptionInput.value = "";
         };
         goalsOtherCheckbox.addEventListener("change", checkGoalsOther);
-        checkGoalsOther(); // Initial check
+        checkGoalsOther();
     }
     
     // --- Cookie Consent Banner Logic ---
@@ -515,7 +504,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const acceptCookiesBtn = document.getElementById("accept-cookies-btn");
     const privacyLinkFromCookie = document.querySelector("[data-modal-trigger=\"privacy-modal-from-cookie\"]");
 
-    // Check if consent was already given
     if (localStorage.getItem("cookieConsent") !== "accepted") {
         if (cookieBanner) cookieBanner.style.display = "block";
     }
@@ -527,12 +515,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     
-    // Ensure the privacy modal can be triggered from the cookie banner link
     if (privacyLinkFromCookie) {
         privacyLinkFromCookie.addEventListener("click", (event) => {
-            event.preventDefault(); // Prevent default link behavior
+            event.preventDefault();
             event.stopPropagation();
-            openModal("privacy-modal"); // Open the privacy modal
+            openModal("privacy-modal");
         });
     }
 
