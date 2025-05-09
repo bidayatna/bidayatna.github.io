@@ -428,6 +428,54 @@ document.addEventListener("DOMContentLoaded", () => {
             prompt += "\nGenerate the strategy.";
             console.log("Generated Prompt:", prompt);
 
+            console.log("Constructed Prompt:", prompt);
+
+// Call Together.ai API
+try {
+    const strategy = await generateAIStrategy(prompt); // This is where the API call happens
+    if (strategy) {
+        // Logic to display the strategy in the modal
+        const strategyModal = document.createElement("div");
+        strategyModal.className = "modal";
+        strategyModal.setAttribute("data-modal", "strategy-modal");
+        strategyModal.setAttribute("aria-hidden", "true");
+        strategyModal.innerHTML = `
+            <div class="modal-content strategy-modal-content">
+                <span class="close modal-close" aria-label="Close Strategy">&times;</span>
+                <h2>Your Marketing Strategy</h2>
+                <div class="strategy-content">
+                    ${strategy.replace(/\n/g, '<br>')}
+                </div>
+                <div class="strategy-actions">
+                    <button id="copy-strategy-btn" class="action-button">Copy to Clipboard</button>
+                    <button id="download-strategy-btn" class="action-button">Download as Text</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(strategyModal);
+        openModal("strategy-modal");
+
+        // Button actions for copying and downloading
+        document.getElementById("copy-strategy-btn").addEventListener("click", () => {
+            navigator.clipboard.writeText(strategy)
+                .then(() => alert("Strategy copied to clipboard!"))
+                .catch(err => console.error("Error copying text: ", err));
+        });
+        document.getElementById("download-strategy-btn").addEventListener("click", () => {
+            const element = document.createElement("a");
+            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(strategy));
+            element.setAttribute("download", "bidayatna_marketing_strategy.txt");
+            element.style.display = "none";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+    }
+} catch (error) {
+    console.error("Error submitting prompt to Together.ai API:", error);
+    alert("An error occurred while generating your strategy. Please try again.");
+}
+
             // AI Strategy Generation and Modal Display
             if (validationPassed) {
                 try {
