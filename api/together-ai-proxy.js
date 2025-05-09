@@ -17,12 +17,6 @@ module.exports = async (req, res) => {
         return;
     }
 
-    // MODIFICATION: Using a hardcoded simple prompt for testing
-    const hardcodedTestPrompt = "Tell me a short joke.";
-    console.log("PROXY_LOG: Using hardcoded test prompt:", hardcodedTestPrompt);
-    
-    // Original prompt logic (commented out for this test)
-    /*
     let prompt;
     try {
         prompt = req.body.prompt;
@@ -34,7 +28,6 @@ module.exports = async (req, res) => {
         res.status(400).json({ error: "Invalid request body. Ensure 'prompt' is provided." });
         return;
     }
-    */
 
     const API_KEY = process.env.TOGETHER_API_KEY;
 
@@ -45,7 +38,7 @@ module.exports = async (req, res) => {
     }
 
     const API_URL = "https://api.together.xyz/v1/completions";
-    console.log(`PROXY_LOG: Sending request to Together.ai with hardcoded prompt...`);
+    console.log(`PROXY_LOG: Sending request to Together.ai for prompt: ${prompt ? prompt.substring(0, 100) : 'undefined'}...`);
 
     try {
         const togetherResponse = await fetch(API_URL, {
@@ -56,20 +49,20 @@ module.exports = async (req, res) => {
             },
             body: JSON.stringify({
                 model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-                prompt: hardcodedTestPrompt, // Using the hardcoded prompt
-                max_tokens: 100, // Reduced max_tokens for a short joke
+                prompt: prompt,
+                max_tokens: 500,
                 temperature: 0.7,
                 top_p: 0.9,
-                // stop: ["", "\n\n"] // Stop parameter remains commented out
+                // stop: ["", "\n\n"] // MODIFICATION: Commented out stop parameter
             })
         });
 
-        const responseText = await togetherResponse.text();
+        const responseText = await togetherResponse.text(); // Get raw text first for logging
         console.log(`PROXY_LOG: Received raw response text from Together.ai (status ${togetherResponse.status}):`, responseText);
 
         let responseData;
         try {
-            responseData = JSON.parse(responseText);
+            responseData = JSON.parse(responseText); // Try to parse as JSON
         } catch (parseError) {
             console.error("PROXY_LOG: Failed to parse Together.ai response as JSON:", parseError.message);
             if (togetherResponse.ok) {
