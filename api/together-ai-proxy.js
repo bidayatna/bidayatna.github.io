@@ -1,20 +1,11 @@
 // Save this file as api/together-ai-proxy.js in your project root for Vercel
 
-// Vercel's Node.js environment (e.g., Node 18.x) includes global fetch.
-// If you need to support older Node versions or prefer node-fetch, 
-// you would install it (npm install node-fetch) and import it:
-// const fetch = require("node-fetch"); 
-// Or: import fetch from 'node-fetch'; (if using ES modules, configure Vercel accordingly)
-
 module.exports = async (req, res) => {
-    // Set CORS headers for all responses from this function
-    // Vercel automatically handles OPTIONS preflight requests for routes that set these headers.
-    res.setHeader("Access-Control-Allow-Origin", "*"); // Or specify your frontend domain for better security
+    // Set CORS headers
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
 
-    // Vercel handles OPTIONS preflight requests automatically if the method below is POST only.
-    // If you explicitly want to handle OPTIONS:
     if (req.method === "OPTIONS") {
         res.status(204).end();
         return;
@@ -28,13 +19,12 @@ module.exports = async (req, res) => {
 
     let prompt;
     try {
-        // Vercel automatically parses JSON body if Content-Type is application/json
         prompt = req.body.prompt;
         if (!prompt) {
             throw new Error("Prompt is missing from the request body.");
         }
     } catch (e) {
-        console.error("Error accessing request body or prompt missing:", e.message);
+        console.error("PROXY_LOG: Error accessing request body or prompt missing:", e.message);
         res.status(400).json({ error: "Invalid request body. Ensure 'prompt' is provided." });
         return;
     }
@@ -42,12 +32,13 @@ module.exports = async (req, res) => {
     const API_KEY = process.env.TOGETHER_API_KEY;
 
     if (!API_KEY) {
-        console.error("TOGETHER_API_KEY environment variable is not set.");
+        console.error("PROXY_LOG: TOGETHER_API_KEY environment variable is not set.");
         res.status(500).json({ error: "Server configuration error: API key missing." });
         return;
     }
 
     const API_URL = "https://api.together.xyz/v1/completions";
+    console.log(`PROXY_LOG: Sending request to Together.ai for prompt: ${prompt ? prompt.substring(0, 100) : 'undefined'}...`);
 
     try {
         const togetherResponse = await fetch(API_URL, {
@@ -66,21 +57,43 @@ module.exports = async (req, res) => {
             })
         });
 
-        const responseData = await togetherResponse.json();
+        const responseText = await togetherResponse.text(); // Get raw text first for logging
+        console.log(`PROXY_LOG: Received raw response text from Together.ai (status ${togetherResponse.status}):`, responseText);
+
+        let responseData;
+        try {
+            responseData = JSON.parse(responseText); // Try to parse as JSON
+        } catch (parseError) {
+            console.error("PROXY_LOG: Failed to parse Together.ai response as JSON:", parseError.message);
+            // If parsing fails, but status was ok, it's an unexpected non-JSON response
+            if (togetherResponse.ok) {
+                 res.status(500).json({ error: "Received non-JSON response from AI API", details: responseText });
+            } else {
+                 // If status was not ok and parsing failed, send the raw text as detail
+                 res.status(togetherResponse.status).json({
+                    error: `Together.ai API request failed: ${togetherResponse.statusText}`,
+                    details: responseText 
+                });
+            }
+            return;
+        }
+        
+        console.log("PROXY_LOG: Parsed response data from Together.ai:", JSON.stringify(responseData, null, 2));
 
         if (!togetherResponse.ok) {
-            console.error("Together.ai API Error:", togetherResponse.status, responseData);
+            console.error("PROXY_LOG: Together.ai API Error (after parsing):", togetherResponse.status, responseData);
             res.status(togetherResponse.status).json({
                 error: `Together.ai API request failed: ${togetherResponse.statusText}`,
                 details: responseData
             });
             return;
         }
-
+        
+        console.log("PROXY_LOG: Sending successful response back to client:", JSON.stringify(responseData, null, 2));
         res.status(200).json(responseData);
 
     } catch (error) {
-        console.error("Error calling Together.ai API or processing its response:", error.message, error.stack);
+        console.error("PROXY_LOG: Error calling Together.ai API or processing its response:", error.message, error.stack);
         res.status(500).json({ error: "Failed to generate strategy due to an internal server error." });
     }
 };
