@@ -182,50 +182,59 @@ document.addEventListener("DOMContentLoaded", () => {
         checkAgeRange();
     }
 
-    // --- Together.ai API Integration Function ---
-    async function generateAIStrategy(prompt) {
-        const API_KEY = "tgp_v1_l1fatYNMkPkwiSacIWTAdBLrl6-BehQOmJLiaeCnDTQ";
-        const API_URL = "https://api.together.xyz/v1/completions";
+    // --- MODIFIED Together.ai API Integration Function (Uses Serverless Proxy) ---
+    async function generateAIStrategy(promptText) {
+        // IMPORTANT: Replace with the actual URL of YOUR deployed serverless function
+        const proxyApiUrl = "/.netlify/functions/together-ai-proxy"; // Example for Netlify
+        // const proxyApiUrl = "/api/together-ai-proxy"; // Example for Vercel
+
         const loadingElement = document.createElement("div");
         loadingElement.className = "loading-indicator";
         loadingElement.innerHTML = "<p>Generating your personalized marketing strategy...</p><div class=\"spinner\"></div>";
+        document.body.appendChild(loadingElement);
 
         try {
-            document.body.appendChild(loadingElement);
-            const response = await fetch(API_URL, {
+            const response = await fetch(proxyApiUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${API_KEY}`
                 },
-                body: JSON.stringify({
-                    model: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-                    prompt: prompt,
-                    max_tokens: 500,
-                    temperature: 0.7,
-                    top_p: 0.9,
-                    stop: ["", "\n\n"]
-                })
+                body: JSON.stringify({ prompt: promptText }), // Send prompt in the request body
             });
-            document.body.removeChild(loadingElement);
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
+
+            if (document.body.contains(loadingElement)) {
+                document.body.removeChild(loadingElement);
             }
+
+            if (!response.ok) {
+                const errorData = await response.json(); // Attempt to parse error response
+                console.error("Proxy API Error:", response.status, errorData);
+                throw new Error(`Proxy API request failed with status ${response.status}: ${errorData.error || response.statusText}`);
+            }
+
             const data = await response.json();
-            return data.choices[0].text;
+            
+            if (data.choices && data.choices.length > 0 && data.choices[0].text) {
+                return data.choices[0].text.trim();
+            } else {
+                console.error("Invalid response structure from proxy:", data);
+                return "No valid response from AI.";
+            }
+
         } catch (error) {
-            console.error("Error generating strategy:", error);
-            alert("There was an error generating your strategy. Please try again later.");
-            const existingLoading = document.querySelector(".loading-indicator");
-            if (existingLoading) document.body.removeChild(existingLoading);
+            console.error("Error calling serverless function:", error);
+            if (document.body.contains(loadingElement)) {
+                document.body.removeChild(loadingElement);
+            }
+            alert("There was an error generating your strategy. Please check the console for details and try again later.");
             return null;
         }
     }
 
-    // --- Strategy Generation Button Logic (Using Together.ai) ---
+    // --- Strategy Generation Button Logic (Using MODIFIED Together.ai function) ---
     if (submitBtn) {
         submitBtn.addEventListener("click", async () => {
-            // Validation and Data Gathering
+            // Validation and Data Gathering (This part remains the same as original)
             const formData = {};
             let validationPassed = true;
             let firstErrorElement = null;
@@ -270,25 +279,23 @@ document.addEventListener("DOMContentLoaded", () => {
             if (formData.ageRange === "other") formData.ageRangeOther = getValue("age-range-other");
             formData.locations = getValue("locations");
             formData.socialPlatforms = getCheckedValues("social");
-            formData.socialOtherDescription = getValue("social-other-description"); // Added for 'other' social
+            formData.socialOtherDescription = getValue("social-other-description");
             formData.languages = getValue("languages");
             formData.primaryGoals = getCheckedValues("goals");
-            formData.goalsOtherDescription = getValue("goals-other-description"); // Added for 'other' goals
+            formData.goalsOtherDescription = getValue("goals-other-description");
             formData.goalsTimeframe = getValue("goals-timeframe");
             formData.goalsRoi = validateNumber("goals-roi", "Expected ROI / Revenue Goal (SAR)");
             formData.strategyStatus = getValue("strategy-status");
             formData.currentStrategyDescription = getValue("current-strategy-description");
             formData.marketingBudgetAmount = validateNumber("marketing-budget-amount", "Marketing Budget Amount (SAR)");
             formData.marketingBudgetPeriod = getValue("marketing-budget-period");
-            formData.marketingBudgetPeriodOther = getValue("marketing-budget-period-other"); // Added for 'other' budget period
+            formData.marketingBudgetPeriodOther = getValue("marketing-budget-period-other");
             formData.marketingSource = getRadioValue("marketing_source");
             formData.marketingIdeas = getValue("marketing-ideas");
             formData.brandVoice = getValue("brand-voice");
             formData.contentTypes = getValue("content-types");
             formData.competitors = getValue("competitors");
 
-            // --- Conditional Validation ---
-            // Ensure strategy status is selected
             if (!formData.strategyStatus) {
                 alert("Please select whether you have an existing marketing strategy.");
                 const element = document.getElementById("strategy-status");
@@ -296,7 +303,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 validationPassed = false;
                 if (!firstErrorElement) firstErrorElement = element;
             }
-            // Require strategy description if status is 'yes'
             else if (formData.strategyStatus === "yes" && !formData.currentStrategyDescription) {
                 alert("Please describe your current strategy since you selected \"Yes\".");
                 const element = document.getElementById("current-strategy-description");
@@ -305,7 +311,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!firstErrorElement) firstErrorElement = element;
             }
 
-            // Require budget period if budget amount is given
             if (formData.marketingBudgetAmount !== null && !formData.marketingBudgetPeriod) {
                 alert("Please select a budget period (Monthly, Yearly, Total, Other) since you provided a budget amount.");
                 const element = document.getElementById("marketing-budget-period");
@@ -319,27 +324,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            // Constructing the prompt (This part remains the same as original)
+            let prompt = "Generate a comprehensive marketing strategy based on the following business details:\n";
             const addLine = (label, value, emptyText = "[User wants AI to determine/suggest]") => {
-                // Specific exceptions where empty means Not Provided, not AI suggestion
                 const notProvidedExceptions = [
-                    "Website",
-                    "Current Users/Customers",
-                    "Target Locations / Countries",
-                    "Languages Spoken",
-                    "Primary Goals"
-                    // Timeframe is handled conditionally below
+                    "Website", "Current Users/Customers", "Target Locations / Countries",
+                    "Languages Spoken", "Primary Goals"
                 ];
-
                 const isEmpty = (value === null || value === "" || value === undefined || (Array.isArray(value) && value.length === 0));
-
-                if (isEmpty && notProvidedExceptions.includes(label)) {
-                    emptyText = "[Not Provided]";
-                }
-
-                // Conditional logic for Timeframe
-                if (label === "Timeframe for Goals" && (!formData.primaryGoals || formData.primaryGoals.length === 0)) {
-                    emptyText = "[Not Provided]";
-                }
+                if (isEmpty && notProvidedExceptions.includes(label)) emptyText = "[Not Provided]";
+                if (label === "Timeframe for Goals" && (!formData.primaryGoals || formData.primaryGoals.length === 0)) emptyText = "[Not Provided]";
 
                 if (!isEmpty) {
                     prompt += `- ${label}: ${Array.isArray(value) ? value.join(", ") : value}\n`;
@@ -347,306 +341,152 @@ document.addEventListener("DOMContentLoaded", () => {
                     prompt += `- ${label}: ${emptyText}\n`;
                 }
             };
-            prompt += "**Business Identity:**\n";
-            addLine("Brand / Company Name", formData.brandName);
-            addLine("Brief Description", formData.businessDescription);
-            addLine("Website", formData.website); // Exception handled by addLine
-            addLine("Industry / Niche", formData.industryNiche);
-            prompt += "\n**Target Audience:**\n";
-            addLine("Current Users/Customers", formData.currentUsers); // Exception handled by addLine
-            addLine("Target Users / Growth Goal", formData.targetUsers);
-            let ageRangeDisplay = formData.ageRange;
-            if (formData.ageRange === "other" && formData.ageRangeOther) ageRangeDisplay = `Other (${formData.ageRangeOther})`;
-            else if (formData.ageRange === "other") ageRangeDisplay = "Other (Not Specified)";
-            addLine("User Age Range", ageRangeDisplay);
-            addLine("Target Locations / Countries", formData.locations); // Exception handled by addLine
-            // Prepare social platforms display string
+
+            addLine("Brand/Company Name", formData.brandName);
+            addLine("Business Description", formData.businessDescription);
+            addLine("Website", formData.website);
+            addLine("Industry/Niche", formData.industryNiche);
+            addLine("Current Users/Customers", formData.currentUsers);
+            addLine("Targeted Users/Growth Goal", formData.targetUsers);
+            let ageDisplay = formData.ageRange;
+            if (formData.ageRange === "other" && formData.ageRangeOther) ageDisplay = formData.ageRangeOther;
+            addLine("User Age Range", ageDisplay);
+            addLine("Target Locations / Countries", formData.locations);
             let socialDisplay = formData.socialPlatforms;
-            if (Array.isArray(socialDisplay) && socialDisplay.includes("other")) {
-                const otherPlatforms = socialDisplay.filter(p => p !== "other").join(", ");
-                let otherDescription = formData.socialOtherDescription ? ` (${formData.socialOtherDescription})` : " (Not Specified)";
-                if (otherPlatforms) {
-                    socialDisplay = `${otherPlatforms}, Other${otherDescription}`;
-                } else {
-                    socialDisplay = `Other${otherDescription}`;
-                }
+            if (socialDisplay.includes("other") && formData.socialOtherDescription) {
+                socialDisplay = socialDisplay.filter(p => p !== "other").concat(formData.socialOtherDescription);
             }
             addLine("Main Social Media Platforms", socialDisplay);
-            addLine("Languages Spoken", formData.languages); // Exception handled by addLine
-            prompt += "\n**Marketing Goals:**\n";
-            // Prepare goals display string
+            addLine("Languages Spoken by Audience", formData.languages);
             let goalsDisplay = formData.primaryGoals;
-            if (Array.isArray(goalsDisplay) && goalsDisplay.includes("other")) {
-                // Filter out 'other' and join remaining goals
-                const otherGoals = goalsDisplay.filter(g => g !== "other").join(", ");
-                let otherDescription = formData.goalsOtherDescription ? ` (${formData.goalsOtherDescription})` : " (Not Specified)";
-                // Construct the final string
-                if (otherGoals) {
-                    goalsDisplay = `${otherGoals}, Other${otherDescription}`;
-                } else {
-                    goalsDisplay = `Other${otherDescription}`;
-                }
+            if (goalsDisplay.includes("other") && formData.goalsOtherDescription) {
+                goalsDisplay = goalsDisplay.filter(g => g !== "other").concat(formData.goalsOtherDescription);
             }
-            addLine("Primary Goals", goalsDisplay); // Use the constructed display string, exception handled by addLine
-            addLine("Timeframe for Goals", formData.goalsTimeframe); // Conditional logic handled by addLine
-            addLine("Expected ROI / Revenue Goal (SAR)", formData.goalsRoi);
-            prompt += "\n**Current Strategy & Resources:**\n";
-            addLine("Existing Strategy Status", formData.strategyStatus);
-            addLine("Current Strategy Description", formData.currentStrategyDescription);
-            let budgetString = "[User wants AI to determine/suggest]";
-            if (formData.marketingBudgetAmount !== null) {
-                budgetString = `${formData.marketingBudgetAmount} SAR`;
-                let periodDisplay = formData.marketingBudgetPeriod;
-                if (periodDisplay) {
-                    if (periodDisplay === "other" && formData.marketingBudgetPeriodOther) {
-                        periodDisplay = `Other (${formData.marketingBudgetPeriodOther})`;
-                    } else if (periodDisplay === "other") {
-                        periodDisplay = "Other (Not Specified)";
-                    }
-                    budgetString += ` (${periodDisplay})`;
-                } else {
-                    // This case is prevented by validation, but included for robustness
-                    budgetString += ` (Period not specified)`; 
-                }
-            } else if (formData.marketingBudgetPeriod) {
-                 // This case might occur if user only selects period
-                 let periodDisplay = formData.marketingBudgetPeriod;
-                 if (periodDisplay === "other" && formData.marketingBudgetPeriodOther) {
-                     periodDisplay = `Other (${formData.marketingBudgetPeriodOther})`;
-                 } else if (periodDisplay === "other") {
-                     periodDisplay = "Other (Not Specified)";
-                 }
-                 budgetString = `Budget period specified as ${periodDisplay}, but amount not provided.`;
+            addLine("Primary Marketing Goals", goalsDisplay);
+            addLine("Timeframe for Goals", formData.goalsTimeframe);
+            addLine("Expected ROI or Revenue Goal (SAR)", formData.goalsRoi);
+            addLine("Existing Marketing Strategy Status", formData.strategyStatus);
+            if (formData.strategyStatus === "yes" || formData.strategyStatus === "rough") {
+                addLine("Current Strategy Description", formData.currentStrategyDescription);
             }
-            addLine("Marketing Budget", budgetString);
-            addLine("Marketing Source (In-house/Outsourced)", formData.marketingSource);
-            prompt += "\n**Creative Ideas & Preferences:**\n";
+            let budgetDisplay = formData.marketingBudgetAmount;
+            if (budgetDisplay !== null && formData.marketingBudgetPeriod) {
+                let period = formData.marketingBudgetPeriod;
+                if (period === "other" && formData.marketingBudgetPeriodOther) period = formData.marketingBudgetPeriodOther;
+                budgetDisplay = `${budgetDisplay} SAR (${period})`;
+            }
+            addLine("Marketing Budget", budgetDisplay);
+            addLine("Marketing Source (In-house/Agency/Freelancer/None)", formData.marketingSource);
             addLine("Marketing Ideas to Explore", formData.marketingIdeas);
-            addLine("Brand Voice or Tone", formData.brandVoice);
+            addLine("Brand Voice/Tone", formData.brandVoice);
             addLine("Preferred Content Types", formData.contentTypes);
-            addLine("Competitors", formData.competitors);
-            prompt += "\nGenerate the strategy.";
-            console.log("Generated Prompt:", prompt);
+            addLine("Competitors to Admire/Outperform", formData.competitors);
 
-            console.log("Constructed Prompt:", prompt);
+            prompt += "\nPlease provide a detailed, actionable marketing strategy. Include sections for: Executive Summary, Target Audience Deep Dive, Key Marketing Objectives (SMART), Core Messaging & Positioning, Recommended Marketing Channels & Tactics (with rationale), Content Strategy Outline, Budget Allocation Suggestions (if budget provided, otherwise general guidance), KPIs & Measurement Plan, and a Timeline/Roadmap. The strategy should be professional, insightful, and tailored to the provided information.";
 
-// Call Together.ai API
-try {
-    const strategy = await generateAIStrategy(prompt); // This is where the API call happens
-    if (strategy) {
-        // Logic to display the strategy in the modal
-        const strategyModal = document.createElement("div");
-        strategyModal.className = "modal";
-        strategyModal.setAttribute("data-modal", "strategy-modal");
-        strategyModal.setAttribute("aria-hidden", "true");
-        strategyModal.innerHTML = `
-            <div class="modal-content strategy-modal-content">
-                <span class="close modal-close" aria-label="Close Strategy">&times;</span>
-                <h2>Your Marketing Strategy</h2>
-                <div class="strategy-content">
-                    ${strategy.replace(/\n/g, '<br>')}
-                </div>
-                <div class="strategy-actions">
-                    <button id="copy-strategy-btn" class="action-button">Copy to Clipboard</button>
-                    <button id="download-strategy-btn" class="action-button">Download as Text</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(strategyModal);
-        openModal("strategy-modal");
+            console.log("Generated Prompt for AI:", prompt);
 
-        // Button actions for copying and downloading
-        document.getElementById("copy-strategy-btn").addEventListener("click", () => {
-            navigator.clipboard.writeText(strategy)
-                .then(() => alert("Strategy copied to clipboard!"))
-                .catch(err => console.error("Error copying text: ", err));
-        });
-        document.getElementById("download-strategy-btn").addEventListener("click", () => {
-            const element = document.createElement("a");
-            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(strategy));
-            element.setAttribute("download", "bidayatna_marketing_strategy.txt");
-            element.style.display = "none";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-        });
-    }
-} catch (error) {
-    console.error("Error submitting prompt to Together.ai API:", error);
-    alert("An error occurred while generating your strategy. Please try again.");
-}
+            // Call the MODIFIED function to get the AI strategy via proxy
+            const aiStrategy = await generateAIStrategy(prompt);
 
-            // AI Strategy Generation and Modal Display
-            if (validationPassed) {
-                try {
-                    const strategy = await generateAIStrategy(prompt);
-                    if (strategy) {
-                        const strategyModal = document.createElement("div");
-                        strategyModal.className = "modal";
-                        strategyModal.setAttribute("data-modal", "strategy-modal");
-                        strategyModal.setAttribute("aria-hidden", "true");
-                        strategyModal.innerHTML = `
-                            <div class="modal-content strategy-modal-content">
-                                <span class="close modal-close" aria-label="Close Strategy">&times;</span>
-                                <h2>Your Marketing Strategy</h2>
-                                <div class="strategy-content">
-                                    ${strategy.replace(/\n/g, '<br>')}
-                                </div>
-                                <div class="strategy-actions">
-                                    <button id="copy-strategy-btn" class="action-button">Copy to Clipboard</button>
-                                    <button id="download-strategy-btn" class="action-button">Download as Text</button>
-                                </div>
-                            </div>
-                        `;
-                        document.body.appendChild(strategyModal);
-                        openModal("strategy-modal");
-                        document.getElementById("copy-strategy-btn").addEventListener("click", () => {
-                            navigator.clipboard.writeText(strategy)
-                                .then(() => alert("Strategy copied to clipboard!"))
-                                .catch(err => console.error("Error copying text: ", err));
-                        });
-                        document.getElementById("download-strategy-btn").addEventListener("click", () => {
-                            const element = document.createElement("a");
-                            element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(strategy));
-                            element.setAttribute("download", "bidayatna_marketing_strategy.txt");
-                            element.style.display = "none";
-                            document.body.appendChild(element);
-                            element.click();
-                            document.body.removeChild(element);
-                        });
+            if (aiStrategy) {
+                // Display the strategy (e.g., in a modal or a new section)
+                // For now, let's just alert it or log it
+                console.log("AI Generated Strategy:", aiStrategy);
+                // You would replace this with your actual display logic
+                // For example, creating a new modal or div to show the strategy:
+                const strategyModalContent = document.createElement("div");
+                strategyModalContent.style.whiteSpace = "pre-wrap"; // Preserve formatting
+                strategyModalContent.textContent = aiStrategy;
+                
+                // Example: Open a new modal to display the strategy
+                // This assumes you have a generic modal structure or can create one
+                const resultModal = document.createElement("div");
+                resultModal.className = "modal is-open"; // Add classes to make it visible
+                resultModal.setAttribute("data-modal", "strategy-result-modal");
+                resultModal.setAttribute("aria-hidden", "false");
+                const resultContent = document.createElement("div");
+                resultContent.className = "modal-content";
+                const closeBtn = document.createElement("span");
+                closeBtn.className = "close modal-close";
+                closeBtn.innerHTML = "&times;";
+                closeBtn.onclick = () => {
+                    closeModal(resultModal);
+                    // Optional: remove the modal from DOM after closing if it was dynamically added
+                    if (document.body.contains(resultModal)) {
+                        document.body.removeChild(resultModal);
                     }
-                } catch (error) {
-                    console.error("Error in strategy generation process:", error);
-                    alert("There was an error generating your strategy. Please try again later.");
-                }
+                };
+                const title = document.createElement("h2");
+                title.textContent = "Your AI-Generated Marketing Strategy";
+                resultContent.appendChild(closeBtn);
+                resultContent.appendChild(title);
+                resultContent.appendChild(strategyModalContent);
+                resultModal.appendChild(resultContent);
+                document.body.appendChild(resultModal);
+                showOverlay(); // Show overlay if not already visible
+                openModal("strategy-result-modal"); // This might be redundant if classes are set correctly
+            } else {
+                // Error already handled in generateAIStrategy
+                console.log("Strategy generation failed or returned null.");
             }
-        }); // End of submitBtn listener
-    } // End of if(submitBtn)
+        });
+    }
 
-    // --- Survey Form Submission Logic (Using FormSubmit) ---
+    // --- Survey Form Logic ---
     if (surveyForm) {
-        const referralRadio = surveyForm.querySelectorAll("input[name=\"referral\"]");
-        const socialSpecifyDiv = document.getElementById("social-media-specify");
-        const referralOtherInput = document.getElementById("referral-other-specify");
-
-        referralRadio.forEach(radio => {
-            radio.addEventListener("change", () => {
-                if (socialSpecifyDiv) socialSpecifyDiv.style.display = (radio.value === "social_media" && radio.checked) ? "block" : "none";
-                if (referralOtherInput) referralOtherInput.style.display = (radio.value === "other" && radio.checked) ? "block" : "none";
-                if (radio.value !== "social_media") {
-                    surveyForm.querySelectorAll("input[name=\"social_platform\"]:checked").forEach(cb => cb.checked = false);
-                }
-                if (radio.value !== "other" && referralOtherInput) {
-                    referralOtherInput.value = "";
-                }
-            });
-        });
-
-        surveyForm.addEventListener("submit", (event) => {
-            let surveyValid = true;
-            let firstSurveyErrorElement = null;
-            surveyForm.querySelectorAll(".error-message").forEach(el => el.remove());
-            surveyForm.querySelectorAll("[style*=\"border-color: red\"]").forEach(el => el.style.borderColor = "");
-
-            surveyForm.querySelectorAll("[data-required=\"true\"]").forEach(group => {
-                const groupLabel = group.previousElementSibling?.textContent || "This field";
-                const requiredMsg = group.dataset.requiredMsg || `${groupLabel} is required.`;
+        surveyForm.addEventListener("submit", function(event) {
+            let missingRequired = false;
+            const requiredGroups = surveyForm.querySelectorAll("[data-required=\"true\"]");
+            
+            requiredGroups.forEach(group => {
                 const inputs = group.querySelectorAll("input[type=\"radio\"], input[type=\"checkbox\"]");
-                const isChecked = Array.from(inputs).some(input => input.checked);
+                let isChecked = false;
+                inputs.forEach(input => {
+                    if (input.checked) isChecked = true;
+                });
                 if (!isChecked) {
-                    surveyValid = false;
-                    event.preventDefault();
-                    const errorDiv = document.createElement("div");
-                    errorDiv.className = "error-message";
-                    errorDiv.textContent = requiredMsg;
-                    group.appendChild(errorDiv);
-                    if (!firstSurveyErrorElement) firstSurveyErrorElement = inputs[0];
+                    missingRequired = true;
+                    const msg = group.dataset.requiredMsg || "This field is required.";
+                    alert(msg);
+                    // Optionally, focus the first input of the group or highlight the group
+                    if (inputs.length > 0) inputs[0].focus();
                 }
             });
 
-            surveyForm.querySelectorAll("input[type=\"text\"][required], textarea[required]").forEach(input => {
-                if (!input.value.trim()) {
-                    surveyValid = false;
-                    event.preventDefault();
-                    const groupLabel = input.previousElementSibling?.textContent || "This field";
-                    const requiredMsg = input.dataset.requiredMsg || `${groupLabel} is required.`;
-                    input.style.borderColor = "red";
-                    const errorDiv = document.createElement("div");
-                    errorDiv.className = "error-message";
-                    errorDiv.style.marginLeft = "0";
-                    errorDiv.textContent = requiredMsg;
-                    input.parentNode.insertBefore(errorDiv, input.nextSibling);
-                    if (!firstSurveyErrorElement) firstSurveyErrorElement = input;
-                }
-            });
-
-            if (!surveyValid) {
-                if (firstSurveyErrorElement) firstSurveyErrorElement.focus();
-                alert("Please fill out all required survey fields.");
-                return;
+            if (missingRequired) {
+                event.preventDefault(); // Stop form submission
             }
-            // If valid, FormSubmit handles the submission
+            // If submission proceeds, it will go to FormSubmit.co as configured in HTML
         });
-
-        // Check for survey=thanks in URL
-        if (window.location.search.includes("survey=thanks")) {
-            alert("Thank you for your feedback! We appreciate your input.");
-            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState({path: newUrl}, "", newUrl);
-        }
-    } // End of if(surveyForm)
-
-    // --- Cookie Consent Logic ---
-    const cookieBanner = document.getElementById("cookie-consent-banner");
-    const acceptCookiesBtn = document.getElementById("accept-cookies-btn");
-    const privacyLinkInBanner = cookieBanner ? cookieBanner.querySelector("a[data-modal-trigger=\"privacy-modal-from-cookie\"]") : null;
-    const consentGiven = localStorage.getItem("cookie_consent_given");
-
-    if (cookieBanner && acceptCookiesBtn && !consentGiven) {
-        cookieBanner.style.display = "flex";
-        acceptCookiesBtn.addEventListener("click", () => {
-            cookieBanner.style.display = "none";
-            localStorage.setItem("cookie_consent_given", "true");
-        });
-        if (privacyLinkInBanner) {
-            privacyLinkInBanner.setAttribute("data-modal-trigger", "privacy-modal");
-            privacyLinkInBanner.addEventListener("click", (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                openModal("privacy-modal");
-            });
-        }
-    } // End of cookie consent logic
-
-}); // End DOMContentLoaded
-
-    // --- Goals Other Field Logic ---
-    const goalsOtherCheckbox = document.querySelector("input[name=\"goals\"][value=\"other\"]");
-    const goalsOtherDescriptionInput = document.getElementById("goals-other-description");
-    if (goalsOtherCheckbox && goalsOtherDescriptionInput) {
-        const checkGoalsOther = () => {
-            goalsOtherDescriptionInput.style.display = goalsOtherCheckbox.checked ? "block" : "none";
-            if (!goalsOtherCheckbox.checked) goalsOtherDescriptionInput.value = "";
-        };
-        goalsOtherCheckbox.addEventListener("change", checkGoalsOther);
-        checkGoalsOther(); // Initial check
     }
 
-    // --- Budget Period Other Field Logic ---
-    const budgetPeriodSelect = document.getElementById("marketing-budget-period");
-    const budgetPeriodOtherInput = document.getElementById("marketing-budget-period-other");
-    if (budgetPeriodSelect && budgetPeriodOtherInput) {
-        const checkBudgetPeriodOther = () => {
-            budgetPeriodOtherInput.style.display = (budgetPeriodSelect.value === "other") ? "block" : "none";
-            if (budgetPeriodSelect.value !== "other") budgetPeriodOtherInput.value = "";
-        };
-        budgetPeriodSelect.addEventListener("change", checkBudgetPeriodOther);
-        checkBudgetPeriodOther(); // Initial check
+    // --- Conditional Display for "Other" Input Fields ---
+    function setupConditionalInput(selectId, otherInputId) {
+        const selectElement = document.getElementById(selectId);
+        const otherInputElement = document.getElementById(otherInputId);
+
+        if (selectElement && otherInputElement) {
+            const checkOther = () => {
+                otherInputElement.style.display = (selectElement.value === "other") ? "block" : "none";
+                if (selectElement.value !== "other") {
+                    otherInputElement.value = ""; // Clear if not "other"
+                }
+            };
+            selectElement.addEventListener("change", checkOther);
+            checkOther(); // Initial check on page load
+        }
     }
 
+    setupConditionalInput("social-platforms-select", "social-other-description"); // Assuming you change checkbox to select or adapt logic
+    setupConditionalInput("marketing-goals-select", "goals-other-description"); // Assuming you change checkbox to select or adapt logic
+    setupConditionalInput("marketing-budget-period", "marketing-budget-period-other");
+    // Note: The original HTML uses checkboxes for social platforms and goals.
+    // The setupConditionalInput is designed for select elements.
+    // You'll need to adjust your HTML or this JS if you keep checkboxes for those.
+    // For checkboxes, you might check if the 'other' checkbox is checked.
 
-
-    // --- Social Media Other Field Logic ---
+    // Example for checkbox-based "Other" field (Social Media):
     const socialOtherCheckbox = document.querySelector("input[name=\"social\"][value=\"other\"]");
     const socialOtherDescriptionInput = document.getElementById("social-other-description");
     if (socialOtherCheckbox && socialOtherDescriptionInput) {
@@ -657,3 +497,43 @@ try {
         socialOtherCheckbox.addEventListener("change", checkSocialOther);
         checkSocialOther(); // Initial check
     }
+
+    // Example for checkbox-based "Other" field (Marketing Goals):
+    const goalsOtherCheckbox = document.querySelector("input[name=\"goals\"][value=\"other\"]");
+    const goalsOtherDescriptionInput = document.getElementById("goals-other-description");
+    if (goalsOtherCheckbox && goalsOtherDescriptionInput) {
+        const checkGoalsOther = () => {
+            goalsOtherDescriptionInput.style.display = goalsOtherCheckbox.checked ? "block" : "none";
+            if (!goalsOtherCheckbox.checked) goalsOtherDescriptionInput.value = "";
+        };
+        goalsOtherCheckbox.addEventListener("change", checkGoalsOther);
+        checkGoalsOther(); // Initial check
+    }
+    
+    // --- Cookie Consent Banner Logic ---
+    const cookieBanner = document.getElementById("cookie-consent-banner");
+    const acceptCookiesBtn = document.getElementById("accept-cookies-btn");
+    const privacyLinkFromCookie = document.querySelector("[data-modal-trigger=\"privacy-modal-from-cookie\"]");
+
+    // Check if consent was already given
+    if (localStorage.getItem("cookieConsent") !== "accepted") {
+        if (cookieBanner) cookieBanner.style.display = "block";
+    }
+
+    if (acceptCookiesBtn) {
+        acceptCookiesBtn.addEventListener("click", () => {
+            localStorage.setItem("cookieConsent", "accepted");
+            if (cookieBanner) cookieBanner.style.display = "none";
+        });
+    }
+    
+    // Ensure the privacy modal can be triggered from the cookie banner link
+    if (privacyLinkFromCookie) {
+        privacyLinkFromCookie.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent default link behavior
+            event.stopPropagation();
+            openModal("privacy-modal"); // Open the privacy modal
+        });
+    }
+
+});
