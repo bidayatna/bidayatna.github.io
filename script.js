@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- MODIFIED Together.ai API Integration Function (Uses Serverless Proxy) ---
     async function generateAIStrategy(promptText) {
         // IMPORTANT: Replace with the actual URL of YOUR deployed serverless function
-        const proxyApiUrl = "/.netlify/functions/together-ai-proxy"; // Example for Netlify
+        const proxyApiUrl = "/api/together-ai-proxy"; // For Vercel
         // const proxyApiUrl = "/api/together-ai-proxy"; // Example for Vercel
 
         const loadingElement = document.createElement("div");
